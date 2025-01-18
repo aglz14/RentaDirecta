@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 20%;
+    --primary: 157 100% 33%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 74 35% 50%;
+    --secondary-foreground: 0 0% 100%;
+    --accent: 0 0% 20%;
+    --accent-foreground: 0 0% 100%;
+    --muted: 157 30% 95%;
+    --muted-foreground: 157 10% 40%;
+    --border: 157 30% 90%;
+    --ring: 157 100% 33%;
+    --radius: 0.5rem;
+  }
+}
+
+.custom-header, .custom-footer {
+  background-color: #323232;
+}
+
+.primary-gradient {
+  background: linear-gradient(135deg, #00A86B 0%, #ACAF50 100%);
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #00A86B 0%, #ACAF50 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.payment-option {
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.payment-option:hover {
+  border-color: #00A86B;
+  transform: translateY(-4px);
+}
+
+.custom-shadow {
+  box-shadow: 0 4px 20px rgba(0, 168, 107, 0.1);
+}
