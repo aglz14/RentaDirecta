@@ -5,6 +5,10 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { Toaster } from "@/components/ui/toaster";
 import App from './App';
 import Panel from './pages/Panel';
+import { DashboardContent } from '@/components/dashboard/DashboardContent';
+import { Tenants } from '@/components/dashboard/Tenants';
+import { Planes } from '@/components/dashboard/Planes';
+import { Account } from '@/components/dashboard/Account';
 import TermsAndConditions from './pages/TermsAndConditions';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import CookiesPolicy from './pages/CookiesPolicy';
@@ -16,8 +20,26 @@ const router = createBrowserRouter([
     element: <App />,
   },
   {
-    path: '/panel/*',
+    path: '/panel',
     element: <Panel />,
+    children: [
+      {
+        index: true,
+        element: <DashboardContent />,
+      },
+      {
+        path: 'inquilinos',
+        element: <Tenants />,
+      },
+      {
+        path: 'planes',
+        element: <Planes />,
+      },
+      {
+        path: 'cuenta',
+        element: <Account />,
+      },
+    ],
   },
   {
     path: '/terminos',
