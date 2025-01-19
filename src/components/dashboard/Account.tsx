@@ -24,7 +24,7 @@ type AccountFormData = z.infer<typeof accountSchema>;
 export function Account() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const { user, profile, loading } = useAuth();
+  const { user, profile, refreshProfile } = useAuth();
 
   const { register, handleSubmit, formState: { errors } } = useForm<AccountFormData>({
     resolver: zodResolver(accountSchema),
@@ -51,13 +51,17 @@ export function Account() {
       const { error: updateError } = await supabase
         .from('profiles')
         .update({
-          first_name: data.firstName,
-          last_name: data.lastName,
+          first_name: data.firstName.trim(),
+          last_name: data.lastName.trim(),
           whatsapp: data.whatsapp,
+          updated_at: new Date().toISOString(),
         })
         .eq('id', user.id);
 
       if (updateError) throw updateError;
+
+      // Refresh profile data in context
+      await refreshProfile(user.id);
 
       toast({
         title: 'Perfil actualizado',
@@ -75,20 +79,10 @@ export function Account() {
     }
   };
 
-  if (loading) {
+  if (!user || !profile) {
     return (
       <div className="flex justify-center items-center h-96">
         <Loader2 className="h-8 w-8 animate-spin text-[#00A86B]" />
-      </div>
-    );
-  }
-
-  if (!user || !profile) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="text-center text-gray-600">
-          Por favor, inicia sesión para acceder a esta página.
-        </div>
       </div>
     );
   }
