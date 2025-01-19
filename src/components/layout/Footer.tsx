@@ -1,5 +1,5 @@
 import React from 'react';
-import { Building, Facebook, Instagram, Linkedin, Twitter, Mail, Phone, MapPin } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Twitter, Mail, Phone, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 
@@ -10,9 +10,14 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           {/* Logo and Description */}
           <div className="space-y-4">
-            <Link to="/" className="inline-flex items-center space-x-3 hover:opacity-90 transition-opacity">
-              <Building className="h-8 w-8 text-white" />
-              <span className="text-2xl font-bold text-white">PropTech</span>
+            <Link to="/" className="inline-flex items-center hover:opacity-90 transition-opacity">
+              <div className="w-12 h-12 flex-shrink-0">
+                <img 
+                  src="https://kgepsmcikgxoqjzhjxwq.supabase.co/storage/v1/object/public/logos/WhatsApp%20Image%202025-01-16%20at%2019.44.30%20(2).jpeg" 
+                  alt="RentaDirecta Logo" 
+                  className="w-full h-full object-contain rounded-lg"
+                />
+              </div>
             </Link>
             <p className="text-gray-300">
               Optimizando la gestión de propiedades para propietarios e inquilinos.
@@ -78,19 +83,19 @@ export function Footer() {
             <ul className="space-y-4">
               <li className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 text-[#00A86B]" />
-                <a href="mailto:info@proptech.com" className="text-base text-gray-300 hover:text-[#00A86B] transition-colors">
-                  info@proptech.com
+                <a href="mailto:info@rentadirecta.mx" className="text-base text-gray-300 hover:text-[#00A86B] transition-colors">
+                  info@rentadirecta.mx
                 </a>
               </li>
               <li className="flex items-center space-x-3">
                 <Phone className="h-5 w-5 text-[#00A86B]" />
-                <a href="tel:+525512345678" className="text-base text-gray-300 hover:text-[#00A86B] transition-colors">
-                  +52 (55) 1234-5678
+                <a href="tel:+528112345678" className="text-base text-gray-300 hover:text-[#00A86B] transition-colors">
+                  +52 (81) 1234-5678
                 </a>
               </li>
               <li className="flex items-center space-x-3">
                 <MapPin className="h-5 w-5 text-[#00A86B]" />
-                <span className="text-base text-gray-300">Ciudad de México, México</span>
+                <span className="text-base text-gray-300">Monterrey, México</span>
               </li>
             </ul>
           </div>
@@ -99,7 +104,7 @@ export function Footer() {
         {/* Copyright Section */}
         <div className="mt-12 pt-8 border-t border-gray-700">
           <p className="text-center text-base text-gray-400">
-            © {new Date().getFullYear()} PropTech. Todos los derechos reservados.
+            © {new Date().getFullYear()} RentaDirecta. Todos los derechos reservados.
           </p>
         </div>
       </div>
