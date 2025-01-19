@@ -5,6 +5,10 @@ import { Link, useLocation } from 'react-router-dom';
 export function DashboardNav() {
   const location = useLocation();
   
+  const isActive = (path: string) => {
+    return location.pathname === path;
+  };
+  
   return (
     <nav className="border-b bg-[#00A86B] shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -13,7 +17,7 @@ export function DashboardNav() {
             <Button 
               variant="ghost" 
               className={`flex items-center text-white hover:text-white hover:bg-white/20 transition-colors ${
-                location.pathname === '/panel' ? 'bg-white/20 font-medium' : ''
+                isActive('/panel') ? 'bg-white/20 font-medium' : ''
               }`}
               asChild
             >
@@ -25,7 +29,7 @@ export function DashboardNav() {
             <Button 
               variant="ghost" 
               className={`flex items-center text-white hover:text-white hover:bg-white/20 transition-colors ${
-                location.pathname === '/panel/inquilinos' ? 'bg-white/20 font-medium' : ''
+                isActive('/panel/inquilinos') ? 'bg-white/20 font-medium' : ''
               }`}
               asChild
             >
@@ -37,7 +41,7 @@ export function DashboardNav() {
             <Button 
               variant="ghost" 
               className={`flex items-center text-white hover:text-white hover:bg-white/20 transition-colors ${
-                location.pathname === '/panel/planes' ? 'bg-white/20 font-medium' : ''
+                isActive('/panel/planes') ? 'bg-white/20 font-medium' : ''
               }`}
               asChild
             >
@@ -49,7 +53,7 @@ export function DashboardNav() {
             <Button 
               variant="ghost" 
               className={`flex items-center text-white hover:text-white hover:bg-white/20 transition-colors ${
-                location.pathname === '/panel/cuenta' ? 'bg-white/20 font-medium' : ''
+                isActive('/panel/cuenta') ? 'bg-white/20 font-medium' : ''
               }`}
               asChild
             >

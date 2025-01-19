@@ -118,7 +118,7 @@ export function Account() {
                   <Input
                     id="firstName"
                     {...register('firstName')}
-                    className={errors.firstName ? 'border-red-500' : ''}
+                    className={`bg-white text-gray-900 ${errors.firstName ? 'border-red-500' : 'border-gray-200'}`}
                   />
                   {errors.firstName && (
                     <p className="text-sm text-red-500">{errors.firstName.message}</p>
@@ -129,7 +129,7 @@ export function Account() {
                   <Input
                     id="lastName"
                     {...register('lastName')}
-                    className={errors.lastName ? 'border-red-500' : ''}
+                    className={`bg-white text-gray-900 ${errors.lastName ? 'border-red-500' : 'border-gray-200'}`}
                   />
                   {errors.lastName && (
                     <p className="text-sm text-red-500">{errors.lastName.message}</p>
@@ -144,7 +144,7 @@ export function Account() {
                   type="email"
                   {...register('email')}
                   disabled
-                  className="bg-gray-50 text-gray-600"
+                  className="bg-gray-50 text-gray-900"
                 />
                 <p className="text-sm text-gray-500">
                   El correo electrónico no se puede modificar
@@ -156,7 +156,7 @@ export function Account() {
                 <Input
                   id="whatsapp"
                   {...register('whatsapp')}
-                  className={errors.whatsapp ? 'border-red-500' : ''}
+                  className={`bg-white text-gray-900 ${errors.whatsapp ? 'border-red-500' : 'border-gray-200'}`}
                 />
                 {errors.whatsapp && (
                   <p className="text-sm text-red-500">{errors.whatsapp.message}</p>

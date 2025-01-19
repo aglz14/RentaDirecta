@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from '@/hooks/use-toast';
 import { supabase, isSupabaseConfigured, validateWhatsApp, validateEmail } from '@/lib/supabase';
+import { useAuth } from '@/contexts/AuthContext';
 
 const signUpSchema = z.object({
   firstName: z.string().min(1, 'El nombre es requerido'),
@@ -42,6 +43,7 @@ interface SignUpFormProps {
 export function SignUpForm({ onSuccess }: SignUpFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { refreshProfile } = useAuth();
   const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -73,6 +75,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
 
       setIsLoading(true);
       
+      // Step 1: Sign up the user with metadata
       const { data: authData, error: signUpError } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
@@ -82,8 +85,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
             last_name: data.lastName,
             whatsapp: data.whatsapp,
             user_type: data.userType,
-          },
-          emailRedirectTo: `${window.location.origin}/auth/callback`
+          }
         }
       });
 
@@ -105,6 +107,28 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
       }
 
       if (authData.user) {
+        // Step 2: Wait a moment for the trigger to create the profile
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Step 3: Update profile data directly
+        const { error: updateError } = await supabase
+          .from('profiles')
+          .update({
+            first_name: data.firstName,
+            last_name: data.lastName,
+            whatsapp: data.whatsapp,
+            user_type: data.userType,
+          })
+          .eq('id', authData.user.id);
+
+        if (updateError) {
+          console.error('Error updating profile:', updateError);
+          throw new Error('No se pudo actualizar el perfil. Por favor, intenta de nuevo.');
+        }
+
+        // Step 4: Refresh profile data in context
+        await refreshProfile(authData.user.id);
+
         toast({
           title: '¡Cuenta creada!',
           description: 'Tu cuenta ha sido creada exitosamente.',

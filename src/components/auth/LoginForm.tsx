@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/contexts/AuthContext';
 
 const loginSchema = z.object({
   email: z.string().email('Correo electrónico inválido'),
@@ -23,6 +24,7 @@ interface LoginFormProps {
 export function LoginForm({ onSuccess }: LoginFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { refreshProfile } = useAuth();
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
@@ -30,22 +32,27 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   const onSubmit = async (data: LoginFormData) => {
     try {
       setIsLoading(true);
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data: authData, error } = await supabase.auth.signInWithPassword({
         email: data.email,
         password: data.password,
       });
 
       if (error) throw error;
 
-      toast({
-        title: '¡Bienvenido!',
-        description: 'Has iniciado sesión correctamente.',
-      });
-      onSuccess();
+      if (authData.user) {
+        await refreshProfile(authData.user.id);
+        
+        toast({
+          title: '¡Bienvenido!',
+          description: 'Has iniciado sesión correctamente.',
+        });
+        onSuccess();
+      }
     } catch (error) {
+      console.error('Login error:', error);
       toast({
         title: 'Error',
-        description: 'Credenciales incorrectas. Por favor, intenta de nuevo.',
+        description: error instanceof Error ? error.message : 'Credenciales incorrectas. Por favor, intenta de nuevo.',
         variant: 'destructive',
       });
     } finally {

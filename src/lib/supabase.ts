@@ -13,7 +13,7 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
     autoRefreshToken: true,
     persistSession: true,
     storage: window.localStorage,
-    detectSessionInUrl: true,
+    detectSessionInUrl: false,
     flowType: 'pkce',
   },
 });
@@ -33,22 +33,9 @@ export const isSupabaseConfigured = () => {
   return Boolean(supabaseUrl && supabaseAnonKey);
 };
 
-// Helper function to check if there's an active session
-export const hasValidSession = async () => {
-  try {
-    const { data: { session }, error } = await supabase.auth.getSession();
-    if (error) throw error;
-    return !!session;
-  } catch (error) {
-    console.error('Error checking session:', error);
-    return false;
-  }
-};
-
-// Helper function to handle auth errors
-export const handleAuthError = (error: any) => {
-  if (error?.message?.includes('refresh_token_not_found')) {
-    return 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.';
-  }
-  return error?.message || 'Ha ocurrido un error de autenticación.';
+// Helper function to clear auth data on explicit logout
+export const clearAuthData = () => {
+  window.localStorage.removeItem('supabase.auth.token');
+  window.localStorage.removeItem('sb-kgepsmcikgxoqjzhjxwq-auth-token');
+  supabase.auth.signOut();
 };
