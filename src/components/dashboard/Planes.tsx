@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   AlertDialog,
-  AlertDialogAction,
+  AlertDialogAction, 
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -15,49 +15,34 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 
-const plans = [
+const paymentPlans = [
   {
-    id: 'basic',
-    name: 'Plan Básico',
-    price: '499',
-    description: 'Ideal para propietarios que inician',
+    id: 'subscription',
+    name: 'Suscripción por Quincena',
+    description: 'Pago automático quincenal con 5% de descuento',
     features: [
-      'Hasta 5 propiedades',
-      'Gestión básica de inquilinos',
-      'Reportes mensuales',
-      'Soporte por correo',
+      'Descuento del 5% en la renta',
+      'Pagos automáticos',
+      'Sin cargos adicionales',
+      'Recordatorios automáticos',
+      'Historial de pagos detallado',
     ],
   },
   {
-    id: 'pro',
-    name: 'Plan Profesional',
-    price: '999',
-    description: 'Para propietarios con múltiples propiedades',
+    id: 'flex',
+    name: 'Pagos Flex',
+    description: 'Flexibilidad en métodos y fechas de pago',
     features: [
-      'Hasta 15 propiedades',
-      'Gestión avanzada de inquilinos',
-      'Reportes semanales',
+      'Múltiples métodos de pago',
+      'Fechas flexibles',
+      'Recordatorios personalizados',
+      'Sin penalización por cambio de fecha',
       'Soporte prioritario',
-      'Análisis de mercado',
-    ],
-  },
-  {
-    id: 'enterprise',
-    name: 'Plan Empresarial',
-    price: '1,999',
-    description: 'Solución completa para empresas inmobiliarias',
-    features: [
-      'Propiedades ilimitadas',
-      'Gestión completa de inquilinos',
-      'Reportes en tiempo real',
-      'Soporte 24/7',
-      'Análisis avanzado de mercado',
-      'API personalizada',
     ],
   },
 ];
 
-export function Settings() {
+export function Planes() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -65,7 +50,7 @@ export function Settings() {
   const { user, profile } = useAuth();
 
   // Simulated current plan - in production, this would come from your backend
-  const currentPlan = 'basic';
+  const currentPlan = 'subscription';
 
   const handlePlanChange = async (planId: string) => {
     setSelectedPlan(planId);
@@ -81,15 +66,15 @@ export function Settings() {
       await new Promise(resolve => setTimeout(resolve, 1000)); // Simulated API call
 
       toast({
-        title: 'Plan actualizado',
-        description: 'Tu plan ha sido actualizado exitosamente.',
+        title: 'Plan de pago actualizado',
+        description: 'Tu plan de pago ha sido actualizado exitosamente.',
       });
 
       setIsDialogOpen(false);
     } catch (error) {
       toast({
         title: 'Error',
-        description: 'No se pudo actualizar el plan. Por favor, intenta de nuevo.',
+        description: 'No se pudo actualizar el plan de pago. Por favor, intenta de nuevo.',
         variant: 'destructive',
       });
     } finally {
@@ -108,14 +93,14 @@ export function Settings() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Gestión de Plan</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Planes de Pago</h1>
         <p className="mt-2 text-gray-600">
-          Administra tu suscripción y elige el plan que mejor se adapte a tus necesidades
+          Elige el plan de pago que mejor se adapte a tus necesidades
         </p>
       </div>
 
-      <div className="grid gap-8 md:grid-cols-3">
-        {plans.map((plan) => (
+      <div className="grid gap-8 md:grid-cols-2 max-w-5xl mx-auto">
+        {paymentPlans.map((plan) => (
           <Card key={plan.id} className={`relative ${plan.id === currentPlan ? 'border-[#00A86B]' : ''}`}>
             {plan.id === currentPlan && (
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
@@ -125,19 +110,17 @@ export function Settings() {
               </div>
             )}
             <CardHeader>
-              <CardTitle className="text-xl font-bold">{plan.name}</CardTitle>
-              <CardDescription>
-                <span className="text-3xl font-bold text-gray-900">${plan.price}</span>
-                <span className="text-gray-600">/mes</span>
+              <CardTitle className="text-2xl font-bold">{plan.name}</CardTitle>
+              <CardDescription className="text-lg">
+                {plan.description}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600 mb-4">{plan.description}</p>
-              <ul className="space-y-3 mb-6">
+              <ul className="space-y-4 mb-6">
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex items-center text-gray-700">
-                    <CheckCircle2 className="h-5 w-5 text-[#00A86B] mr-2" />
-                    {feature}
+                    <CheckCircle2 className="h-5 w-5 text-[#00A86B] mr-2 flex-shrink-0" />
+                    <span>{feature}</span>
                   </li>
                 ))}
               </ul>
@@ -171,7 +154,7 @@ export function Settings() {
           <AlertDialogHeader>
             <AlertDialogTitle>Confirmar cambio de plan</AlertDialogTitle>
             <AlertDialogDescription>
-              ¿Estás seguro de que deseas cambiar tu plan? Este cambio se reflejará en tu próxima factura.
+              ¿Estás seguro de que deseas cambiar tu plan de pago? Este cambio se aplicará a partir del próximo ciclo de facturación.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

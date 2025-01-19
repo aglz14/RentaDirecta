@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Building, User2, LogOut, LayoutDashboard, Home, Settings } from 'lucide-react';
+import { Building, User2, LogOut, LayoutDashboard, Home, CreditCard, UserCog } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthDialog } from '@/components/auth/AuthDialog';
@@ -44,6 +44,17 @@ export function Header() {
     }
   };
 
+  // Get display name from profile
+  const getDisplayName = () => {
+    if (!profile) return 'Usuario';
+    if (profile.first_name) return profile.first_name;
+    if (profile.email) {
+      const emailName = profile.email.split('@')[0];
+      return emailName.charAt(0).toUpperCase() + emailName.slice(1);
+    }
+    return 'Usuario';
+  };
+
   return (
     <header className="custom-header">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -74,7 +85,7 @@ export function Header() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="text-gray-300 hover:text-white flex items-center space-x-2">
                     <User2 className="h-5 w-5" />
-                    <span>{profile?.full_name || profile?.email}</span>
+                    <span>{getDisplayName()}</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent 
@@ -100,11 +111,18 @@ export function Header() {
                     Inquilinos
                   </DropdownMenuItem>
                   <DropdownMenuItem 
-                    onClick={() => navigate('/panel/ajustes')}
+                    onClick={() => navigate('/panel/planes')}
                     className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center"
                   >
-                    <Settings className="h-4 w-4 mr-2" />
-                    Configuración
+                    <CreditCard className="h-4 w-4 mr-2" />
+                    Planes
+                  </DropdownMenuItem>
+                  <DropdownMenuItem 
+                    onClick={() => navigate('/panel/cuenta')}
+                    className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center"
+                  >
+                    <UserCog className="h-4 w-4 mr-2" />
+                    Cuenta
                   </DropdownMenuItem>
                   <DropdownMenuSeparator className="bg-gray-200" />
                   <DropdownMenuItem 

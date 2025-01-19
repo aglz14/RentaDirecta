@@ -7,6 +7,9 @@ interface AuthContextType {
   profile: {
     full_name: string | null;
     email: string;
+    first_name: string;
+    last_name: string;
+    whatsapp: string;
   } | null;
   loading: boolean;
   signOut: () => Promise<void>;
@@ -28,7 +31,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const { data, error } = await supabase
         .from('profiles')
-        .select('full_name, email')
+        .select('*')
         .eq('id', userId)
         .single();
 
@@ -60,7 +63,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth state changed:', event, session);
       setUser(session?.user ?? null);
+      
       if (session?.user) {
         await fetchProfile(session.user.id);
       } else {
@@ -82,6 +87,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Clear local state
       setUser(null);
       setProfile(null);
+      
+      // Clear local storage
+      window.localStorage.removeItem('supabase.auth.token');
+      
+      // Force reload to ensure clean state
+      window.location.href = '/';
     } catch (error) {
       console.error('Error signing out:', error);
       throw error;

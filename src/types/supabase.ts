@@ -17,6 +17,7 @@ export interface Database {
           last_name: string
           full_name: string | null
           whatsapp: string
+          user_type: 'propietario' | 'inquilino'
           created_at: string
           updated_at: string
         }
@@ -26,6 +27,7 @@ export interface Database {
           first_name: string
           last_name: string
           whatsapp: string
+          user_type: 'propietario' | 'inquilino'
           created_at?: string
           updated_at?: string
         }
@@ -35,6 +37,7 @@ export interface Database {
           first_name?: string
           last_name?: string
           whatsapp?: string
+          user_type?: 'propietario' | 'inquilino'
           created_at?: string
           updated_at?: string
         }

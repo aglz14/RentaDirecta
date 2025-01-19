@@ -6,8 +6,15 @@ import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/lib/supabase';
+import { supabase, isSupabaseConfigured, validateWhatsApp, validateEmail } from '@/lib/supabase';
 
 const signUpSchema = z.object({
   firstName: z.string().min(1, 'El nombre es requerido'),
@@ -18,6 +25,9 @@ const signUpSchema = z.object({
     .regex(/^[0-9]+$/, 'Solo se permiten números'),
   password: z.string().min(6, 'La contraseña debe tener al menos 6 caracteres'),
   confirmPassword: z.string(),
+  userType: z.enum(['propietario', 'inquilino'], {
+    required_error: 'Por favor selecciona un tipo de usuario',
+  }),
 }).refine((data) => data.password === data.confirmPassword, {
   message: 'Las contraseñas no coinciden',
   path: ['confirmPassword'],
@@ -32,53 +42,82 @@ interface SignUpFormProps {
 export function SignUpForm({ onSuccess }: SignUpFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const { register, handleSubmit, formState: { errors } } = useForm<SignUpFormData>({
+  const { register, handleSubmit, formState: { errors }, setValue, watch } = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      userType: undefined,
+    }
   });
+
+  const userType = watch('userType');
 
   const onSubmit = async (data: SignUpFormData) => {
     try {
+      if (!isSupabaseConfigured()) {
+        toast({
+          title: 'Error de Configuración',
+          description: 'Por favor, conecta tu proyecto a Supabase primero.',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      // Validate email and WhatsApp
+      if (!validateEmail(data.email)) {
+        throw new Error('El formato del correo electrónico es inválido.');
+      }
+
+      if (!validateWhatsApp(data.whatsapp)) {
+        throw new Error('El formato del número de WhatsApp es inválido.');
+      }
+
       setIsLoading(true);
       
-      // 1. Sign up the user
       const { data: authData, error: signUpError } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
+        options: {
+          data: {
+            first_name: data.firstName,
+            last_name: data.lastName,
+            whatsapp: data.whatsapp,
+            user_type: data.userType,
+          },
+          emailRedirectTo: `${window.location.origin}/auth/callback`
+        }
       });
 
-      if (signUpError) throw signUpError;
-
-      // 2. Create profile immediately after successful signup
-      if (authData.user) {
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .insert([
-            {
-              id: authData.user.id,
-              email: data.email,
-              first_name: data.firstName,
-              last_name: data.lastName,
-              whatsapp: data.whatsapp,
-            },
-          ]);
-
-        if (profileError) {
-          console.error('Error creating profile:', profileError);
-          // Try to delete the auth user if profile creation fails
-          await supabase.auth.admin.deleteUser(authData.user.id);
-          throw new Error('Error creating profile');
+      if (signUpError) {
+        let errorMessage = 'No se pudo crear la cuenta. ';
+        
+        switch (signUpError.message) {
+          case 'User already registered':
+            errorMessage += 'Este correo ya está registrado.';
+            break;
+          case 'Password should be at least 6 characters':
+            errorMessage += 'La contraseña debe tener al menos 6 caracteres.';
+            break;
+          default:
+            errorMessage += 'Por favor, verifica tus datos e intenta de nuevo.';
         }
 
+        throw new Error(errorMessage);
+      }
+
+      if (authData.user) {
         toast({
           title: '¡Cuenta creada!',
           description: 'Tu cuenta ha sido creada exitosamente.',
         });
         onSuccess();
+      } else {
+        throw new Error('No se pudo crear la cuenta. Por favor, intenta de nuevo.');
       }
     } catch (error) {
+      console.error('Error signing up:', error);
       toast({
         title: 'Error',
-        description: 'No se pudo crear la cuenta. Por favor, intenta de nuevo.',
+        description: error instanceof Error ? error.message : 'No se pudo crear la cuenta. Por favor, intenta de nuevo.',
         variant: 'destructive',
       });
     } finally {
@@ -88,6 +127,27 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-4">
+      <div className="space-y-2">
+        <Label htmlFor="userType" className="text-sm font-medium text-gray-700">
+          Tipo de Usuario
+        </Label>
+        <Select
+          onValueChange={(value: 'propietario' | 'inquilino') => setValue('userType', value)}
+          value={userType}
+        >
+          <SelectTrigger className={`bg-white text-gray-900 ${errors.userType ? 'border-red-500' : 'border-gray-300'}`}>
+            <SelectValue placeholder="Selecciona tu tipo de usuario" />
+          </SelectTrigger>
+          <SelectContent className="bg-white border border-gray-200">
+            <SelectItem value="propietario" className="text-gray-900 hover:bg-gray-100">Propietario</SelectItem>
+            <SelectItem value="inquilino" className="text-gray-900 hover:bg-gray-100">Inquilino</SelectItem>
+          </SelectContent>
+        </Select>
+        {errors.userType && (
+          <p className="text-sm text-red-500">{errors.userType.message}</p>
+        )}
+      </div>
+
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="firstName" className="text-sm font-medium text-gray-700">
@@ -120,6 +180,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
           )}
         </div>
       </div>
+
       <div className="space-y-2">
         <Label htmlFor="email-signup" className="text-sm font-medium text-gray-700">
           Correo Electrónico
@@ -135,6 +196,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
           <p className="text-sm text-red-500">{errors.email.message}</p>
         )}
       </div>
+
       <div className="space-y-2">
         <Label htmlFor="whatsapp" className="text-sm font-medium text-gray-700">
           WhatsApp
@@ -150,6 +212,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
           <p className="text-sm text-red-500">{errors.whatsapp.message}</p>
         )}
       </div>
+
       <div className="space-y-2">
         <Label htmlFor="password-signup" className="text-sm font-medium text-gray-700">
           Contraseña
@@ -165,6 +228,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
           <p className="text-sm text-red-500">{errors.password.message}</p>
         )}
       </div>
+
       <div className="space-y-2">
         <Label htmlFor="confirmPassword" className="text-sm font-medium text-gray-700">
           Confirmar Contraseña
@@ -180,6 +244,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
           <p className="text-sm text-red-500">{errors.confirmPassword.message}</p>
         )}
       </div>
+
       <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading ? (
           <>
