@@ -45,7 +45,6 @@ export function Header() {
   };
 
   const getDisplayName = () => {
-    if (!profile) return 'Usuario';
     if (profile.first_name) return profile.first_name;
     if (profile.email) {
       const emailName = profile.email.split('@')[0];
