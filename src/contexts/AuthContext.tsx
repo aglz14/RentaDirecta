@@ -2,15 +2,18 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 
+interface Profile {
+  full_name: string | null;
+  email: string;
+  first_name: string;
+  last_name: string;
+  whatsapp: string;
+  user_type: 'propietario' | 'inquilino';
+}
+
 interface AuthContextType {
   user: User | null;
-  profile: {
-    full_name: string | null;
-    email: string;
-    first_name: string;
-    last_name: string;
-    whatsapp: string;
-  } | null;
+  profile: Profile | null;
   loading: boolean;
   signOut: () => Promise<void>;
 }
@@ -24,7 +27,7 @@ const AuthContext = createContext<AuthContextType>({
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [profile, setProfile] = useState<AuthContextType['profile']>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchProfile = async (userId: string) => {
@@ -41,37 +44,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       if (data) {
-        setProfile(data);
+        setProfile(data as Profile);
       }
     } catch (error) {
       console.error('Error in fetchProfile:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchProfile(session.user.id);
-      } else {
+    const initializeAuth = async () => {
+      try {
+        // Get initial session
+        const { data: { session } } = await supabase.auth.getSession();
+        setUser(session?.user ?? null);
+        
+        if (session?.user) {
+          await fetchProfile(session.user.id);
+        }
+      } catch (error) {
+        console.error('Error initializing auth:', error);
+      } finally {
         setLoading(false);
       }
-    });
+    };
+
+    initializeAuth();
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('Auth state changed:', event, session);
       setUser(session?.user ?? null);
       
       if (session?.user) {
         await fetchProfile(session.user.id);
       } else {
         setProfile(null);
-        setLoading(false);
       }
+      setLoading(false);
     });
 
     return () => {
@@ -90,9 +98,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       // Clear local storage
       window.localStorage.removeItem('supabase.auth.token');
-      
-      // Force reload to ensure clean state
-      window.location.href = '/';
     } catch (error) {
       console.error('Error signing out:', error);
       throw error;
@@ -106,4 +111,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};

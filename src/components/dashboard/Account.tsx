@@ -24,7 +24,7 @@ type AccountFormData = z.infer<typeof accountSchema>;
 export function Account() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const { user, profile } = useAuth();
+  const { user, profile, loading } = useAuth();
 
   const { register, handleSubmit, formState: { errors } } = useForm<AccountFormData>({
     resolver: zodResolver(accountSchema),
@@ -75,7 +75,7 @@ export function Account() {
     }
   };
 
-  if (!user || !profile) {
+  if (loading) {
     return (
       <div className="flex justify-center items-center h-96">
         <Loader2 className="h-8 w-8 animate-spin text-[#00A86B]" />
@@ -83,10 +83,20 @@ export function Account() {
     );
   }
 
+  if (!user || !profile) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="text-center text-gray-600">
+          Por favor, inicia sesión para acceder a esta página.
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Menú</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Cuenta</h1>
         <p className="mt-2 text-gray-600">
           Administra tu información personal y preferencias
         </p>
@@ -95,8 +105,8 @@ export function Account() {
       <div className="max-w-2xl">
         <Card>
           <CardHeader>
-            <CardTitle>Información Personal</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-xl font-bold text-gray-900">Información Personal</CardTitle>
+            <CardDescription className="text-gray-600">
               Actualiza tus datos de contacto y perfil
             </CardDescription>
           </CardHeader>
@@ -104,7 +114,7 @@ export function Account() {
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="firstName">Nombre</Label>
+                  <Label htmlFor="firstName" className="text-gray-700">Nombre</Label>
                   <Input
                     id="firstName"
                     {...register('firstName')}
@@ -115,7 +125,7 @@ export function Account() {
                   )}
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="lastName">Apellido</Label>
+                  <Label htmlFor="lastName" className="text-gray-700">Apellido</Label>
                   <Input
                     id="lastName"
                     {...register('lastName')}
@@ -128,13 +138,13 @@ export function Account() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">Correo Electrónico</Label>
+                <Label htmlFor="email" className="text-gray-700">Correo Electrónico</Label>
                 <Input
                   id="email"
                   type="email"
                   {...register('email')}
                   disabled
-                  className="bg-gray-50"
+                  className="bg-gray-50 text-gray-600"
                 />
                 <p className="text-sm text-gray-500">
                   El correo electrónico no se puede modificar
@@ -142,7 +152,7 @@ export function Account() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="whatsapp">WhatsApp</Label>
+                <Label htmlFor="whatsapp" className="text-gray-700">WhatsApp</Label>
                 <Input
                   id="whatsapp"
                   {...register('whatsapp')}
@@ -154,7 +164,7 @@ export function Account() {
               </div>
 
               <div className="pt-4">
-                <Button type="submit" disabled={isLoading} className="w-full">
+                <Button type="submit" disabled={isLoading} className="w-full bg-[#00A86B] hover:bg-[#009060] text-white">
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />

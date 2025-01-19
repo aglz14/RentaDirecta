@@ -50,13 +50,13 @@ export function Tenants() {
   const getStatusColor = (status: Tenant['status']) => {
     switch (status) {
       case 'Al día':
-        return 'text-green-600';
+        return 'text-green-600 font-medium';
       case 'Pendiente':
-        return 'text-yellow-600';
+        return 'text-yellow-600 font-medium';
       case 'Atrasado':
-        return 'text-red-600';
+        return 'text-red-600 font-medium';
       default:
-        return 'text-gray-600';
+        return 'text-gray-900 font-medium';
     }
   };
 
@@ -80,22 +80,24 @@ export function Tenants() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Nombre</TableHead>
-              <TableHead>Propiedad</TableHead>
-              <TableHead>Plan de Pago</TableHead>
-              <TableHead>Último Pago</TableHead>
-              <TableHead>Estado</TableHead>
+              <TableHead className="text-gray-900 font-semibold">Nombre</TableHead>
+              <TableHead className="text-gray-900 font-semibold">Propiedad</TableHead>
+              <TableHead className="text-gray-900 font-semibold">Plan de Pago</TableHead>
+              <TableHead className="text-gray-900 font-semibold">Último Pago</TableHead>
+              <TableHead className="text-gray-900 font-semibold">Estado</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredTenants.map((tenant) => (
-              <TableRow key={tenant.id}>
-                <TableCell className="font-medium">{tenant.name}</TableCell>
-                <TableCell>{tenant.property}</TableCell>
-                <TableCell>
+              <TableRow key={tenant.id} className="hover:bg-gray-50">
+                <TableCell className="font-medium text-gray-900">{tenant.name}</TableCell>
+                <TableCell className="text-gray-900">{tenant.property}</TableCell>
+                <TableCell className="text-gray-900">
                   {tenant.paymentScheme === 'subscription' ? 'Suscripción' : 'Flex'}
                 </TableCell>
-                <TableCell>{new Date(tenant.lastPayment).toLocaleDateString()}</TableCell>
+                <TableCell className="text-gray-900">
+                  {new Date(tenant.lastPayment).toLocaleDateString()}
+                </TableCell>
                 <TableCell className={getStatusColor(tenant.status)}>
                   {tenant.status}
                 </TableCell>

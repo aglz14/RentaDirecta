@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   AlertDialog,
-  AlertDialogAction, 
+  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -110,8 +110,8 @@ export function Planes() {
               </div>
             )}
             <CardHeader>
-              <CardTitle className="text-2xl font-bold">{plan.name}</CardTitle>
-              <CardDescription className="text-lg">
+              <CardTitle className="text-2xl font-bold text-gray-900">{plan.name}</CardTitle>
+              <CardDescription className="text-gray-600 text-base">
                 {plan.description}
               </CardDescription>
             </CardHeader>
@@ -152,13 +152,13 @@ export function Planes() {
       <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Confirmar cambio de plan</AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogTitle className="text-gray-900">Confirmar cambio de plan</AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-600">
               ¿Estás seguro de que deseas cambiar tu plan de pago? Este cambio se aplicará a partir del próximo ciclo de facturación.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogCancel className="text-gray-700">Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmPlanChange}
               className="bg-[#00A86B] hover:bg-[#009060] text-white"
