@@ -15,8 +15,8 @@ export function PropertyCard({ property }: PropertyCardProps) {
       <CardHeader>
         <div className="flex justify-between items-start">
           <div>
-            <CardTitle className="text-xl font-bold">{property.name}</CardTitle>
-            <CardDescription>{property.address}</CardDescription>
+            <CardTitle className="text-xl font-bold text-gray-900">{property.name}</CardTitle>
+            <CardDescription className="text-gray-600">{property.address}</CardDescription>
           </div>
           <Badge variant="outline" className={schemeColor}>
             {property.paymentScheme === 'subscription' ? 'Suscripción' : 'Flex'}
@@ -26,20 +26,20 @@ export function PropertyCard({ property }: PropertyCardProps) {
       <CardContent>
         <div className="grid grid-cols-2 gap-4">
           <div className="flex items-center gap-2">
-            <Building2 className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">Estado: {property.active ? 'Activo' : 'Inactivo'}</span>
+            <Building2 className="h-4 w-4 text-[#00A86B]" />
+            <span className="text-sm text-gray-700">Estado: {property.active ? 'Activo' : 'Inactivo'}</span>
           </div>
           <div className="flex items-center gap-2">
-            <Users className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">Inquilino: {property.tenantId ? 'Ocupado' : 'Vacante'}</span>
+            <Users className="h-4 w-4 text-[#00A86B]" />
+            <span className="text-sm text-gray-700">Inquilino: {property.tenantId ? 'Ocupado' : 'Vacante'}</span>
           </div>
           <div className="flex items-center gap-2">
-            <CreditCard className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">Renta: ${property.monthlyRent}/mes</span>
+            <CreditCard className="h-4 w-4 text-[#00A86B]" />
+            <span className="text-sm text-gray-700">Renta: ${property.monthlyRent}/mes</span>
           </div>
           <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">Próximo Pago: día 15</span>
+            <Calendar className="h-4 w-4 text-[#00A86B]" />
+            <span className="text-sm text-gray-700">Próximo Pago: día 15</span>
           </div>
         </div>
       </CardContent>

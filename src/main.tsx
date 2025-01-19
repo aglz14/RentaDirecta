@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { AuthProvider } from '@/contexts/AuthContext';
 import App from './App.tsx';
 import Panel from './pages/Panel.tsx';
 import TermsAndConditions from './pages/TermsAndConditions.tsx';
@@ -14,7 +15,7 @@ const router = createBrowserRouter([
     element: <App />,
   },
   {
-    path: '/panel',
+    path: '/panel/*',
     element: <Panel />,
   },
   {
@@ -33,6 +34,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>
 );

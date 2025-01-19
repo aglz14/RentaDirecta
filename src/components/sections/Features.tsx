@@ -9,8 +9,8 @@ const features = [
   },
   {
     icon: <CheckCircle2 className="h-8 w-8" />,
-    title: "Cobros Automatizados",
-    description: "Configura cobros automáticos y recibe pagos de manera puntual y segura."
+    title: "Cobros Puntuales de Rentas",
+    description: "Creamos incentivos para que las rentas se pagen a tiempo."
   },
   {
     icon: <Users className="h-8 w-8" />,
