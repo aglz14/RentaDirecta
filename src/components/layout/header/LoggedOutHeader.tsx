@@ -27,17 +27,10 @@ export function LoggedOutHeader() {
           </Link>
           <div className="flex items-center space-x-4">
             <Button 
-              variant="ghost" 
-              className="text-gray-300 hover:text-white"
-              onClick={() => handleAuthClick('login')}
-            >
-              Iniciar Sesión
-            </Button>
-            <Button 
               className="bg-[#00A86B] hover:bg-[#009060] text-white"
               onClick={() => handleAuthClick('signup')}
             >
-              Registrarse
+              Inicio / Registro
             </Button>
           </div>
         </div>
