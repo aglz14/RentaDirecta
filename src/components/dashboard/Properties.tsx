@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Building2, MapPin, CreditCard, Users, Plus, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -76,6 +76,10 @@ export function Properties() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchProperties();
+  }, [user]);
 
   const filteredProperties = properties.filter(property => {
     const searchLower = searchTerm.toLowerCase();
