@@ -1,4 +1,4 @@
-import { Home, CreditCard, Users, User } from 'lucide-react';
+import { Home, CreditCard, Users, User, Building2, Receipt } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -10,7 +10,7 @@ export function DashboardNav() {
   };
   
   return (
-    <nav className="border-b bg-[#00A86B] shadow-sm">
+    <nav className="border-b bg-[#1B2956] shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center space-x-4">
@@ -24,6 +24,30 @@ export function DashboardNav() {
               <Link to="/panel">
                 <Home className="h-4 w-4 mr-2" />
                 Panel
+              </Link>
+            </Button>
+            <Button 
+              variant="ghost" 
+              className={`flex items-center text-white hover:text-white hover:bg-white/20 transition-colors ${
+                isActive('/panel/propiedades') ? 'bg-white/20 font-medium' : ''
+              }`}
+              asChild
+            >
+              <Link to="/panel/propiedades">
+                <Building2 className="h-4 w-4 mr-2" />
+                Propiedades
+              </Link>
+            </Button>
+            <Button 
+              variant="ghost" 
+              className={`flex items-center text-white hover:text-white hover:bg-white/20 transition-colors ${
+                isActive('/panel/pagos') ? 'bg-white/20 font-medium' : ''
+              }`}
+              asChild
+            >
+              <Link to="/panel/pagos">
+                <Receipt className="h-4 w-4 mr-2" />
+                Pagos
               </Link>
             </Button>
             <Button 

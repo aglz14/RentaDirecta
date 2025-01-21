@@ -1,4 +1,4 @@
-import { User2, LogOut, LayoutDashboard, Home, CreditCard, UserCog } from 'lucide-react';
+import { User2, LogOut, LayoutDashboard, Home, CreditCard, UserCog, Building2, Receipt } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -35,23 +35,19 @@ export function LoggedInHeader() {
   };
 
   const getDisplayName = () => {
-    // First try to get the first name from profile
     if (profile?.first_name && profile.first_name.trim() !== '') {
       return profile.first_name;
     }
     
-    // If no first name, try to get the last name
     if (profile?.last_name && profile.last_name.trim() !== '') {
       return profile.last_name;
     }
     
-    // If no name in profile, use email from profile
     if (profile?.email) {
       const emailName = profile.email.split('@')[0];
       return emailName.charAt(0).toUpperCase() + emailName.slice(1);
     }
     
-    // Finally, use email from auth user
     const emailName = user?.email?.split('@')[0] || '';
     return emailName.charAt(0).toUpperCase() + emailName.slice(1);
   };
@@ -102,11 +98,25 @@ export function LoggedInHeader() {
                   Panel
                 </DropdownMenuItem>
                 <DropdownMenuItem 
+                  onClick={() => navigate('/panel/propiedades')}
+                  className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center"
+                >
+                  <Building2 className="h-4 w-4 mr-2" />
+                  Propiedades
+                </DropdownMenuItem>
+                <DropdownMenuItem 
                   onClick={() => navigate('/panel/inquilinos')}
                   className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center"
                 >
                   <Home className="h-4 w-4 mr-2" />
                   Inquilinos
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => navigate('/panel/pagos')}
+                  className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center"
+                >
+                  <Receipt className="h-4 w-4 mr-2" />
+                  Pagos
                 </DropdownMenuItem>
                 <DropdownMenuItem 
                   onClick={() => navigate('/panel/planes')}

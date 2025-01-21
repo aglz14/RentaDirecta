@@ -3,6 +3,8 @@ import { Loader2 } from 'lucide-react';
 import App from './App';
 import Panel from './pages/Panel';
 import { DashboardContent } from '@/components/dashboard/DashboardContent';
+import { Properties } from '@/components/dashboard/Properties';
+import { Payments } from '@/components/dashboard/Payments';
 import { Tenants } from '@/components/dashboard/Tenants';
 import { Planes } from '@/components/dashboard/Planes';
 import { Account } from '@/components/dashboard/Account';
@@ -17,7 +19,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-[#00A86B]" />
+        <Loader2 className="h-8 w-8 animate-spin text-[#4CAF50]" />
       </div>
     );
   }
@@ -35,6 +37,8 @@ export function AppRoutes() {
       <Route path="/" element={<App />} />
       <Route path="/panel" element={<ProtectedRoute><Panel /></ProtectedRoute>}>
         <Route index element={<DashboardContent />} />
+        <Route path="propiedades" element={<Properties />} />
+        <Route path="pagos" element={<Payments />} />
         <Route path="inquilinos" element={<Tenants />} />
         <Route path="planes" element={<Planes />} />
         <Route path="cuenta" element={<Account />} />
