@@ -23,9 +23,8 @@ const paymentPlans = [
     features: [
       'Descuento del 5% en la renta',
       'Pagos automáticos',
+      'Sólo se requiere tarjeta de crédito',
       'Sin cargos adicionales',
-      'Recordatorios automáticos',
-      'Historial de pagos detallado',
     ],
   },
   {
@@ -35,9 +34,8 @@ const paymentPlans = [
     features: [
       'Múltiples métodos de pago',
       'Fechas flexibles',
+      'Renta basada en la fecha de pago',
       'Recordatorios personalizados',
-      'Sin penalización por cambio de fecha',
-      'Soporte prioritario',
     ],
   },
 ];

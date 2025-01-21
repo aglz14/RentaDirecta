@@ -25,6 +25,10 @@ export function Pricing() {
               </li>
               <li className="flex items-center text-gray-600">
                 <CheckCircle2 className="h-5 w-5 text-[#00A86B] mr-2" />
+                Sólo se requiere tarjeta de crédito
+              </li>
+              <li className="flex items-center text-gray-600">
+                <CheckCircle2 className="h-5 w-5 text-[#00A86B] mr-2" />
                 Sin cargos adicionales
               </li>
             </ul>
@@ -43,7 +47,11 @@ export function Pricing() {
               <li className="flex items-center text-gray-600">
                 <CheckCircle2 className="h-5 w-5 text-[#00A86B] mr-2" />
                 Fechas flexibles
-              </li>
+              </li> 
+              <li className="flex items-center text-gray-600">
+                <CheckCircle2 className="h-5 w-5 text-[#00A86B] mr-2" />
+                Renta basada en la fecha de pago
+              </li> 
               <li className="flex items-center text-gray-600">
                 <CheckCircle2 className="h-5 w-5 text-[#00A86B] mr-2" />
                 Recordatorios personalizados
