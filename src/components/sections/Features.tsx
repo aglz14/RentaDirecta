@@ -25,7 +25,7 @@ export function Features() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-[#323232] mb-4">Propietarios</h2>
-          <h2 className="text-xl font-bold text-[#323232] mb-4">Características Principales</h2>
+          <h2 className="text-2xl font-bold text-[#323232] mb-4">Características Principales</h2>
           <p className="text-xl text-gray-600">Todo lo que necesitas para gestionar tus propiedades de manera eficiente</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
