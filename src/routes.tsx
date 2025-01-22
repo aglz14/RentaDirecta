@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import App from './App';
 import Panel from './pages/Panel';
@@ -15,6 +15,7 @@ import { useAuth } from '@/contexts/AuthContext';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
+  const location = useLocation();
 
   if (loading) {
     return (
@@ -25,7 +26,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (!user) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/" replace state={{ from: location }} />;
   }
 
   return <>{children}</>;
@@ -35,7 +36,14 @@ export function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<App />} />
-      <Route path="/panel" element={<ProtectedRoute><Panel /></ProtectedRoute>}>
+      <Route 
+        path="/panel" 
+        element={
+          <ProtectedRoute>
+            <Panel />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<DashboardContent />} />
         <Route path="propiedades" element={<Properties />} />
         <Route path="pagos" element={<Payments />} />

@@ -24,6 +24,7 @@ export function LoggedInHeader() {
         title: 'Sesión cerrada',
         description: 'Has cerrado sesión correctamente.',
       });
+      navigate('/', { replace: true });
     } catch (error) {
       console.error('Error signing out:', error);
       toast({
@@ -32,6 +33,10 @@ export function LoggedInHeader() {
         variant: 'destructive',
       });
     }
+  };
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
   };
 
   const getDisplayName = () => {
@@ -91,42 +96,42 @@ export function LoggedInHeader() {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-gray-200" />
                 <DropdownMenuItem 
-                  onClick={() => navigate('/panel')}
+                  onClick={() => handleNavigation('/panel')}
                   className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center"
                 >
                   <LayoutDashboard className="h-4 w-4 mr-2" />
                   Panel
                 </DropdownMenuItem>
                 <DropdownMenuItem 
-                  onClick={() => navigate('/panel/propiedades')}
+                  onClick={() => handleNavigation('/panel/propiedades')}
                   className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center"
                 >
                   <Building2 className="h-4 w-4 mr-2" />
                   Propiedades
                 </DropdownMenuItem>
                 <DropdownMenuItem 
-                  onClick={() => navigate('/panel/inquilinos')}
-                  className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center"
-                >
-                  <Home className="h-4 w-4 mr-2" />
-                  Inquilinos
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={() => navigate('/panel/pagos')}
+                  onClick={() => handleNavigation('/panel/pagos')}
                   className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center"
                 >
                   <Receipt className="h-4 w-4 mr-2" />
                   Pagos
                 </DropdownMenuItem>
                 <DropdownMenuItem 
-                  onClick={() => navigate('/panel/planes')}
+                  onClick={() => handleNavigation('/panel/inquilinos')}
+                  className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center"
+                >
+                  <Home className="h-4 w-4 mr-2" />
+                  Inquilinos
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => handleNavigation('/panel/planes')}
                   className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center"
                 >
                   <CreditCard className="h-4 w-4 mr-2" />
                   Planes
                 </DropdownMenuItem>
                 <DropdownMenuItem 
-                  onClick={() => navigate('/panel/cuenta')}
+                  onClick={() => handleNavigation('/panel/cuenta')}
                   className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center"
                 >
                   <UserCog className="h-4 w-4 mr-2" />
