@@ -4,6 +4,7 @@ import { Footer } from '@/components/layout/Footer';
 import { Hero } from '@/components/sections/Hero';
 import { Features } from '@/components/sections/Features';
 import { Pricing } from '@/components/sections/Pricing';
+import { PricingTable } from '@/components/sections/PricingTable';
 import { FAQ } from '@/components/sections/FAQ';
 import { Contact } from '@/components/sections/Contact';
 
@@ -15,6 +16,7 @@ function App() {
         <Hero />
         <Features />
         <Pricing />
+        <PricingTable />
         <FAQ />
         <Contact />
       </main>
