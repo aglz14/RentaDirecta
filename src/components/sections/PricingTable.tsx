@@ -5,14 +5,19 @@ import { AuthDialog } from '@/components/auth/AuthDialog';
 
 const plans = [
   {
-    name: 'Plan Básico',
-    description: 'Ideal para propietarios con 4 o menos propiedades',
-    price: '499',
+    name: 'Plan Gestiona',
+    description: 'Para propietarios que sólo buscan gestionar sus inmubeles',
+    price: '299',
     features: [
-      'Hasta 4 propiedades',
-      'Gestión básica de inquilinos',
-      'Cobros automáticos',
-      'Reportes mensuales',
+      'Gestión de inquilinos',
+      'Control de recibos',
+      'Contratos',
+      'Propiedades',
+      'Gestión de activos',
+      'Mantenimiento',
+      'Solicitudes de remodelación',
+      'Directorio',
+      'Reportes',
       'Soporte por correo',
       'Panel de control personalizado',
     ],
@@ -20,35 +25,42 @@ const plans = [
   },
   {
     name: 'Plan Profesional',
-    description: 'Perfecto para propietarios con 5 a 10 propiedades',
-    price: '999',
+    description: 'Para propietarios con menos de 10 propiedades',
+    price: '499',
     features: [
-      'Hasta 10 propiedades',
-      'Gestión avanzada de inquilinos',
-      'Cobros automáticos',
-      'Reportes semanales',
-      'Soporte prioritario',
+      'Hasta 9 propiedades',
+      'Esquemas de cobros puntuales de renta',
+      'Gestión de inquilinos',
+      'Control de recibos',
+      'Contratos',
+      'Propiedades',
+      'Gestión de activos',
+      'Mantenimiento',
+      'Solicitudes de remodelación',
+      'Directorio',
+      'Reportes',
+      'Soporte por correo y chat',
       'Panel de control personalizado',
-      'Análisis de mercado',
-      'Notificaciones en tiempo real',
     ],
     highlight: true,
   },
   {
     name: 'Plan Empresarial',
-    description: 'Para propietarios con más de 10 propiedades',
-    price: '1,999',
+    description: 'Para propietarios con 10 o más propiedades',
+    price: '449',
     features: [
-      'Propiedades ilimitadas',
-      'Gestión avanzada de inquilinos',
-      'Cobros automáticos',
-      'Reportes en tiempo real',
-      'Soporte 24/7',
+      'Esquemas de cobros de rentas preferenciales',
+      'Gestión de inquilinos',
+      'Control de recibos',
+      'Contratos',
+      'Propiedades',
+      'Gestión de activos',
+      'Mantenimiento',
+      'Solicitudes de remodelación',
+      'Directorio',
+      'Reportes',
+      'Soporte personalizado',
       'Panel de control personalizado',
-      'Análisis avanzado de mercado',
-      'Notificaciones en tiempo real',
-      'API personalizada',
-      'Gestor de documentos',
     ],
     highlight: false,
   },
@@ -88,7 +100,7 @@ export function PricingTable() {
                 <p className="text-gray-600 mb-6">{plan.description}</p>
                 <div className="mb-6">
                   <span className="text-4xl font-bold text-[#323232]">${plan.price}</span>
-                  <span className="text-gray-600">/mes</span>
+                  <span className="text-gray-600">/propiedad</span>
                 </div>
                 <ul className="space-y-4 mb-8">
                   {plan.features.map((feature, featureIndex) => (
