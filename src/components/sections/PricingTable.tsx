@@ -49,7 +49,7 @@ const plans = [
     description: 'Para propietarios con 10 o más propiedades',
     price: '449',
     features: [
-      'Esquemas de cobros de rentas preferenciales',
+      'Esquemas de cobros puntuales de rentas',
       'Gestión de inquilinos',
       'Control de recibos',
       'Contratos',
