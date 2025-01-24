@@ -33,9 +33,6 @@ export function Pricing() {
                 Sin cargos adicionales
               </li>
             </ul>
-            <Button className="w-full bg-[#00A86B] hover:bg-[#009060] text-white">
-              Seleccionar Plan
-            </Button>
           </div>
           <div className="bg-white p-8 rounded-xl custom-shadow payment-option">
             <h3 className="text-2xl font-bold text-[#323232] mb-4">Suscripción Mensual</h3>
@@ -58,9 +55,6 @@ export function Pricing() {
                 Sin cargos adicionales
               </li>
             </ul>
-            <Button className="w-full bg-[#00A86B] hover:bg-[#009060] text-white">
-              Seleccionar Plan
-            </Button>
           </div>
           <div className="bg-white p-8 rounded-xl custom-shadow payment-option">
             <h3 className="text-2xl font-bold text-[#323232] mb-4">Pagos Flex</h3>
@@ -83,9 +77,6 @@ export function Pricing() {
                 Recordatorios personalizados
               </li>
             </ul>
-            <Button className="w-full bg-[#00A86B] hover:bg-[#009060] text-white">
-              Seleccionar Plan
-            </Button>
           </div>
         </div>
       </div>
