@@ -95,7 +95,6 @@ export function PricingTable() {
                    Comenzar Ahora
                   </Button>
                 </div>
-                <br>
                 <ul className="space-y-4 mb-8">
                   {plan.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-center text-gray-600">
