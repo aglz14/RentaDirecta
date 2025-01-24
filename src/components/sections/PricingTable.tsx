@@ -56,7 +56,7 @@ export function PricingTable() {
     <section className="py-24 bg-gray-50" id="pricing-table">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-lg font-bold text-[#4CAF50] mb-4">PLANES</h2>
+          <h2 className="text-lg font-bold text-[#4CAF50] mb-4">PLANES PARA PROPIETARIOS</h2>
           <h2 className="text-4xl font-bold text-[#323232] mb-4">Elige el Plan Perfecto para Ti</h2>
           <p className="text-xl text-gray-600">
             Soluciones adaptadas a diferentes tamaños de portafolios inmobiliarios
@@ -83,9 +83,9 @@ export function PricingTable() {
                 <div className="mb-6">
                   <span className="text-4xl font-bold text-[#323232]">${plan.price}</span>
                   <span className="text-gray-600">/propiedad</span>
-                  <Button className="mt-4"
+                  <Button 
                     onClick={() => setIsAuthOpen(true)}
-                    className={`w-full ${
+                    className={`w-full mt-6 ${
                       plan.highlight
                         ? 'bg-[#4CAF50] hover:bg-[#3d9140] text-white'
                         : 'bg-white text-[#4CAF50] border-2 border-[#4CAF50] hover:bg-[#4CAF50] hover:text-white'
@@ -102,16 +102,6 @@ export function PricingTable() {
                     </li>
                   ))}
                 </ul>
-                <Button
-          onClick={() => setIsAuthOpen(true)}
-          className={`w-full ${
-           plan.highlight
-            ? 'bg-[#4CAF50] hover:bg-[#3d9140] text-white'
-            : 'bg-white text-[#4CAF50] border-2 border-[#4CAF50] hover:bg-[#4CAF50] hover:text-white'
-          }`}
-          >
-           Comenzar Ahora
-        </Button>
               </div>
             </div>
           ))}
