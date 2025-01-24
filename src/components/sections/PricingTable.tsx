@@ -83,7 +83,7 @@ export function PricingTable() {
                 <div className="mb-6">
                   <span className="text-4xl font-bold text-[#323232]">${plan.price}</span>
                   <span className="text-gray-600">/propiedad</span>
-                  <Button style={{ marginTop: '15px' }
+                  <Button className="mt-4"
                     onClick={() => setIsAuthOpen(true)}
                     className={`w-full ${
                       plan.highlight
