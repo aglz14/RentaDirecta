@@ -83,6 +83,16 @@ export function PricingTable() {
                 <div className="mb-6">
                   <span className="text-4xl font-bold text-[#323232]">${plan.price}</span>
                   <span className="text-gray-600">/propiedad</span>
+                  <Button
+                    onClick={() => setIsAuthOpen(true)}
+                    className={`w-full ${
+                      plan.highlight
+                        ? 'bg-[#4CAF50] hover:bg-[#3d9140] text-white'
+                        : 'bg-white text-[#4CAF50] border-2 border-[#4CAF50] hover:bg-[#4CAF50] hover:text-white'
+                      }`}
+                  >
+                   Comenzar Ahora
+                  </Button>
                 </div>
                 <ul className="space-y-4 mb-8">
                   {plan.features.map((feature, featureIndex) => (
