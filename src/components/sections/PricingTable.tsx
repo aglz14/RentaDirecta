@@ -62,16 +62,6 @@ export function PricingTable() {
             Soluciones adaptadas a diferentes tamaños de portafolios inmobiliarios
           </p>
         </div>
-        <Button
-          onClick={() => setIsAuthOpen(true)}
-          className={`w-full ${
-           plan.highlight
-            ? 'bg-[#4CAF50] hover:bg-[#3d9140] text-white'
-            : 'bg-white text-[#4CAF50] border-2 border-[#4CAF50] hover:bg-[#4CAF50] hover:text-white'
-          }`}
-          >
-           Comenzar Ahora
-        </Button>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {plans.map((plan, index) => (
             <div
@@ -102,6 +92,16 @@ export function PricingTable() {
                     </li>
                   ))}
                 </ul>
+                <Button
+          onClick={() => setIsAuthOpen(true)}
+          className={`w-full ${
+           plan.highlight
+            ? 'bg-[#4CAF50] hover:bg-[#3d9140] text-white'
+            : 'bg-white text-[#4CAF50] border-2 border-[#4CAF50] hover:bg-[#4CAF50] hover:text-white'
+          }`}
+          >
+           Comenzar Ahora
+        </Button>
               </div>
             </div>
           ))}
