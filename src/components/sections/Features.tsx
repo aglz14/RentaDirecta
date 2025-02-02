@@ -4,18 +4,18 @@ import { Building, CheckCircle2, Users } from 'lucide-react';
 const features = [
   {
     icon: <Building className="h-8 w-8" />,
-    title: "Gestión Centralizada",
-    description: "Administra todas tus propiedades desde un solo lugar con nuestro dashboard intuitivo."
+    title: "Gestión Simplificada",
+    description: "Administra todas tus propiedades desde una sola plataforma intuitiva."
   },
   {
     icon: <CheckCircle2 className="h-8 w-8" />,
-    title: "Cobros Puntuales de Rentas",
-    description: "Creamos incentivos para que las rentas se pagen a tiempo."
+    title: "Optimización de Ingresos",
+    description: "Herramientas para maximizar tus ganancias y reducir retrasos."
   },
   {
     icon: <Users className="h-8 w-8" />,
-    title: "Gestión de Inquilinos",
-    description: "Mantén un registro detallado de tus inquilinos y su historial de pagos."
+    title: "Ahorro de Tiempo",
+    description: "Automatiza tareas repetitivas, mantén un registro detallado de tus inquilinos y su historial de pagos."
   }
 ];
 
