@@ -10,7 +10,7 @@ const features = [
   {
     icon: <CheckCircle2 className="h-8 w-8" />,
     title: "Optimización de Ingresos",
-    description: "Herramientas para maximizar tus ganancias y reducir retrasos."
+    description: "Herramientas para optimizar tus ingresos y reducir retrasos."
   },
   {
     icon: <Users className="h-8 w-8" />,
