@@ -25,7 +25,7 @@ const plans = [
   },
   {
     name: 'Plan Profesional',
-    description: 'Para propietarios con menos de 10 propiedades',
+    description: 'Para propietarios con 6 o menos propiedades',
     price: '499',
     features: [
       'Hasta 9 propiedades',
@@ -37,7 +37,7 @@ const plans = [
   },
   {
     name: 'Plan Empresarial',
-    description: 'Para propietarios con 10 o más propiedades',
+    description: 'Para propietarios con 7 o más propiedades',
     price: '449',
     features: [
       'Para 10 o más propiedades o edificios',
@@ -108,7 +108,7 @@ export function PricingTable() {
         </div>
       </div>
 
-      <AuthDialog 
+      <AuthDialog
         isOpen={isAuthOpen} 
         onClose={() => setIsAuthOpen(false)} 
         defaultTab="signup"
