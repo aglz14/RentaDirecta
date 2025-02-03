@@ -26,7 +26,7 @@ const plans = [
   {
     name: 'Plan Profesional',
     description: 'Para propietarios con 6 o menos propiedades',
-    price: '499',
+    price: '599',
     features: [
       'Hasta 6 propiedades',
       'Cobros puntuales de renta',
@@ -40,7 +40,7 @@ const plans = [
   {
     name: 'Plan Empresarial',
     description: 'Para propietarios con 7 o más propiedades',
-    price: '399',
+    price: '499',
     features: [
       'Para 7 o más propiedades',
       'Cobros puntuales de renta',
