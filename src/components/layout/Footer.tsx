@@ -20,7 +20,7 @@ export function Footer() {
               </div>
             </Link>
             <p className="text-gray-300">
-              Optimizando la gestión de propiedades para propietarios e inquilinos.
+              Optimizando la gestión de propiedades y rentas.
             </p>
             <div className="flex space-x-4 pt-4">
               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-[#00A86B] transition-colors">
@@ -90,7 +90,7 @@ export function Footer() {
               <li className="flex items-center space-x-3">
                 <Phone className="h-5 w-5 text-[#00A86B]" />
                 <a href="tel:+528112345678" className="text-base text-gray-300 hover:text-[#00A86B] transition-colors">
-                  +52 (81) 1485-7684
+                  +52 (81) 1234-5678
                 </a>
               </li>
               <li className="flex items-center space-x-3">
