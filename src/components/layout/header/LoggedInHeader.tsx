@@ -1,4 +1,4 @@
-import { User2, LogOut, LayoutDashboard, Home, CreditCard, UserCog, Building2, Receipt } from 'lucide-react';
+import { User2, LogOut, Home, Building2, Package, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -99,42 +99,28 @@ export function LoggedInHeader() {
                   onClick={() => handleNavigation('/panel')}
                   className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center"
                 >
-                  <LayoutDashboard className="h-4 w-4 mr-2" />
+                  <Home className="h-4 w-4 mr-2" />
                   Panel
                 </DropdownMenuItem>
                 <DropdownMenuItem 
-                  onClick={() => handleNavigation('/panel/propiedades')}
+                  onClick={() => handleNavigation('/administracion')}
                   className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center"
                 >
                   <Building2 className="h-4 w-4 mr-2" />
-                  Propiedades
+                  Administración
                 </DropdownMenuItem>
                 <DropdownMenuItem 
-                  onClick={() => handleNavigation('/panel/pagos')}
+                  onClick={() => handleNavigation('/mobiliario')}
                   className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center"
                 >
-                  <Receipt className="h-4 w-4 mr-2" />
-                  Pagos
+                  <Package className="h-4 w-4 mr-2" />
+                  Mobiliario
                 </DropdownMenuItem>
                 <DropdownMenuItem 
-                  onClick={() => handleNavigation('/panel/inquilinos')}
+                  onClick={() => handleNavigation('/cuenta')}
                   className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center"
                 >
-                  <Home className="h-4 w-4 mr-2" />
-                  Inquilinos
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={() => handleNavigation('/panel/planes')}
-                  className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center"
-                >
-                  <CreditCard className="h-4 w-4 mr-2" />
-                  Planes
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={() => handleNavigation('/panel/cuenta')}
-                  className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center"
-                >
-                  <UserCog className="h-4 w-4 mr-2" />
+                  <User className="h-4 w-4 mr-2" />
                   Cuenta
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-gray-200" />
