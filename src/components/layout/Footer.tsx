@@ -13,7 +13,7 @@ export function Footer() {
             <Link to="/" className="inline-flex items-center hover:opacity-90 transition-opacity">
               <div className="w-12 h-12 flex-shrink-0">
                 <img 
-                  src="https://kgepsmcikgxoqjzhjxwq.supabase.co/storage/v1/object/public/logos/WhatsApp%20Image%202025-01-16%20at%2019.44.30%20(2).jpeg" 
+                  src="https://kgepsmcikgxoqjzhjxwq.supabase.co/storage/v1/object/public/logos//Logo%20Blue.png" 
                   alt="RentaDirecta Logo" 
                   className="w-full h-full object-contain rounded-lg"
                 />

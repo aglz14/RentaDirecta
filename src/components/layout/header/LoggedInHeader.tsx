@@ -73,7 +73,7 @@ export function LoggedInHeader() {
           <Link to="/" className="flex items-center space-x-4 hover:opacity-90 transition-opacity">
             <div className="w-60 h-15 flex-shrink-0">
               <img 
-                src="https://kgepsmcikgxoqjzhjxwq.supabase.co/storage/v1/object/public/logos/WhatsApp%20Image%202025-01-16%20at%2019.19.36%20(2).jpeg" 
+                src="https://kgepsmcikgxoqjzhjxwq.supabase.co/storage/v1/object/public/logos//Blue%20.png" 
                 alt="RentaDirecta Logo" 
                 className="w-full h-full object-cover rounded-lg"
               />
