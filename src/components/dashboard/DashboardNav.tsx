@@ -1,13 +1,8 @@
-import { Home, CreditCard, Users, User, Building2, Receipt } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Home, CreditCard, Users, User, Building2, Receipt, FileText, Wrench, Package, Warehouse, UserPlus, FileInput as FileInvoice } from 'lucide-react';
 import { NavLink, useLocation } from 'react-router-dom';
 
 export function DashboardNav() {
   const location = useLocation();
-  
-  const isActive = (path: string) => {
-    return location.pathname === path;
-  };
   
   return (
     <nav className="border-b bg-[#1B2956] shadow-sm">
@@ -26,7 +21,7 @@ export function DashboardNav() {
               Panel
             </NavLink>
             <NavLink 
-              to="/panel/propiedades"
+              to="/administracion"
               className={({ isActive }) =>
                 `flex items-center text-white hover:text-white hover:bg-white/20 transition-colors px-4 py-2 rounded-md ${
                   isActive ? 'bg-white/20 font-medium' : ''
@@ -34,43 +29,21 @@ export function DashboardNav() {
               }
             >
               <Building2 className="h-4 w-4 mr-2" />
-              Propiedades
+              Administración
             </NavLink>
             <NavLink 
-              to="/panel/pagos"
+              to="/mobiliario"
               className={({ isActive }) =>
                 `flex items-center text-white hover:text-white hover:bg-white/20 transition-colors px-4 py-2 rounded-md ${
                   isActive ? 'bg-white/20 font-medium' : ''
                 }`
               }
             >
-              <Receipt className="h-4 w-4 mr-2" />
-              Pagos
+              <Package className="h-4 w-4 mr-2" />
+              Mobiliario
             </NavLink>
             <NavLink 
-              to="/panel/inquilinos"
-              className={({ isActive }) =>
-                `flex items-center text-white hover:text-white hover:bg-white/20 transition-colors px-4 py-2 rounded-md ${
-                  isActive ? 'bg-white/20 font-medium' : ''
-                }`
-              }
-            >
-              <Users className="h-4 w-4 mr-2" />
-              Inquilinos
-            </NavLink>
-            <NavLink 
-              to="/panel/planes"
-              className={({ isActive }) =>
-                `flex items-center text-white hover:text-white hover:bg-white/20 transition-colors px-4 py-2 rounded-md ${
-                  isActive ? 'bg-white/20 font-medium' : ''
-                }`
-              }
-            >
-              <CreditCard className="h-4 w-4 mr-2" />
-              Planes
-            </NavLink>
-            <NavLink 
-              to="/panel/cuenta"
+              to="/cuenta"
               className={({ isActive }) =>
                 `flex items-center text-white hover:text-white hover:bg-white/20 transition-colors px-4 py-2 rounded-md ${
                   isActive ? 'bg-white/20 font-medium' : ''

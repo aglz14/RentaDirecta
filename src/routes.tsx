@@ -2,12 +2,10 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import App from './App';
 import Panel from './pages/Panel';
+import Administracion from './pages/Administracion';
+import Mobiliario from './pages/Mobiliario';
+import Cuenta from './pages/Cuenta';
 import { DashboardContent } from '@/components/dashboard/DashboardContent';
-import { Properties } from '@/components/dashboard/Properties';
-import { Payments } from '@/components/dashboard/Payments';
-import { Tenants } from '@/components/dashboard/Tenants';
-import { Planes } from '@/components/dashboard/Planes';
-import { Account } from '@/components/dashboard/Account';
 import TermsAndConditions from './pages/TermsAndConditions';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import CookiesPolicy from './pages/CookiesPolicy';
@@ -45,12 +43,31 @@ export function AppRoutes() {
         }
       >
         <Route index element={<DashboardContent />} />
-        <Route path="propiedades" element={<Properties />} />
-        <Route path="pagos" element={<Payments />} />
-        <Route path="inquilinos" element={<Tenants />} />
-        <Route path="planes" element={<Planes />} />
-        <Route path="cuenta" element={<Account />} />
       </Route>
+      <Route
+        path="/administracion"
+        element={
+          <ProtectedRoute>
+            <Administracion />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/mobiliario"
+        element={
+          <ProtectedRoute>
+            <Mobiliario />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/cuenta"
+        element={
+          <ProtectedRoute>
+            <Cuenta />
+          </ProtectedRoute>
+        }
+      />
       <Route path="/terminos" element={<TermsAndConditions />} />
       <Route path="/privacidad" element={<PrivacyPolicy />} />
       <Route path="/cookies" element={<CookiesPolicy />} />

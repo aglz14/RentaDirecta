@@ -1,7 +1,7 @@
-import { Outlet } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { DashboardNav } from '@/components/dashboard/DashboardNav';
+import { DashboardContent } from '@/components/dashboard/DashboardContent';
 
 export default function Panel() {
   return (
@@ -9,7 +9,7 @@ export default function Panel() {
       <Header />
       <DashboardNav />
       <main className="flex-1">
-        <Outlet />
+        <DashboardContent />
       </main>
       <Footer />
     </div>
