@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
 import { PropertyCard } from './property-card';
 import { PaymentSummary } from './payment-summary';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
 import { Loader2 } from 'lucide-react';
-import { AddPropertyDialog } from './AddPropertyDialog';
 
 interface Property {
   id: string;
@@ -24,7 +22,6 @@ interface Property {
 export function DashboardContent() {
   const [properties, setProperties] = useState<Property[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isAddPropertyOpen, setIsAddPropertyOpen] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
 
@@ -41,7 +38,7 @@ export function DashboardContent() {
           monthly_rent,
           payment_scheme,
           active,
-          tenants (
+          tenants!tenants_property_id_fkey (
             id,
             profile_id
           )
@@ -77,16 +74,8 @@ export function DashboardContent() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Panel Principal</h1>
-        <Button 
-          className="bg-[#00A86B] hover:bg-[#009060] text-white"
-          onClick={() => setIsAddPropertyOpen(true)}
-        >
-          Agregar Propiedad
-        </Button>
-      </div>
+    <div className="space-y-8">
+      <h1 className="text-3xl font-bold text-gray-900">Panel Principal</h1>
 
       <PaymentSummary />
 
@@ -95,7 +84,7 @@ export function DashboardContent() {
         {properties.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-lg shadow">
             <p className="text-gray-600">
-              No tienes propiedades registradas. ¡Comienza agregando una!
+              No tienes propiedades registradas. Dirígete a la sección de Administración para agregar una propiedad.
             </p>
           </div>
         ) : (
@@ -117,12 +106,6 @@ export function DashboardContent() {
           </div>
         )}
       </div>
-
-      <AddPropertyDialog
-        isOpen={isAddPropertyOpen}
-        onClose={() => setIsAddPropertyOpen(false)}
-        onSuccess={fetchProperties}
-      />
     </div>
   );
 }

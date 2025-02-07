@@ -4,10 +4,13 @@ export interface Property {
   id: string;
   name: string;
   address: string;
-  monthlyRent: number;
-  paymentScheme: PaymentScheme;
+  monthly_rent: number;
   active: boolean;
-  tenantId?: string;
+  property_type?: {
+    name: string;
+  };
+  property_type_id: string;
+  building_id?: string;
 }
 
 export interface Tenant {

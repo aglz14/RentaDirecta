@@ -16,6 +16,35 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
     detectSessionInUrl: false,
     flowType: 'pkce',
   },
+  global: {
+    headers: {
+      'X-Client-Info': 'rentadirecta-web',
+    },
+  },
+  db: {
+    schema: 'public',
+  },
+  realtime: {
+    params: {
+      eventsPerSecond: 10,
+    },
+  },
+  // Add retry configuration
+  fetch: (url, options = {}) => {
+    return fetch(url, {
+      ...options,
+      headers: {
+        ...options.headers,
+        'Cache-Control': 'no-cache',
+      },
+    }).then(async (response) => {
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({}));
+        throw new Error(error.message || 'Network response was not ok');
+      }
+      return response;
+    });
+  },
 });
 
 // Helper function to validate WhatsApp number
@@ -38,4 +67,19 @@ export const clearAuthData = () => {
   window.localStorage.removeItem('supabase.auth.token');
   window.localStorage.removeItem('sb-kgepsmcikgxoqjzhjxwq-auth-token');
   supabase.auth.signOut();
+};
+
+// Helper function to handle Supabase errors
+export const handleSupabaseError = (error: any): string => {
+  console.error('Supabase error:', error);
+  
+  if (error?.message?.includes('Failed to fetch')) {
+    return 'Error de conexión. Por favor, verifica tu conexión a internet e intenta de nuevo.';
+  }
+  
+  if (error?.code === 'PGRST301') {
+    return 'La sesión ha expirado. Por favor, inicia sesión nuevamente.';
+  }
+  
+  return error?.message || 'Ha ocurrido un error. Por favor, intenta de nuevo.';
 };

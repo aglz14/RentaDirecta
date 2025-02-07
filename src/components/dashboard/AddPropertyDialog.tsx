@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -19,10 +19,20 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
+
+interface PropertyType {
+  id: string;
+  name: string;
+}
+
+interface Building {
+  id: string;
+  name: string;
+}
 
 const propertySchema = z.object({
   name: z.string()
@@ -36,9 +46,10 @@ const propertySchema = z.object({
     .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
       message: 'La renta debe ser un número mayor a 0',
     }),
-  payment_scheme: z.enum(['subscription', 'flex'], {
-    required_error: 'Selecciona un esquema de pago',
+  property_type_id: z.string({
+    required_error: 'Selecciona un tipo de propiedad',
   }),
+  building_id: z.string().optional(),
 });
 
 type PropertyFormData = z.infer<typeof propertySchema>;
@@ -51,31 +62,80 @@ interface AddPropertyDialogProps {
 
 export function AddPropertyDialog({ isOpen, onClose, onSuccess }: AddPropertyDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const [propertyTypes, setPropertyTypes] = useState<PropertyType[]>([]);
+  const [buildings, setBuildings] = useState<Building[]>([]);
   const { user } = useAuth();
   const { toast } = useToast();
-  const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm<PropertyFormData>({
+  
+  const { register, handleSubmit, formState: { errors }, reset, setValue, watch } = useForm<PropertyFormData>({
     resolver: zodResolver(propertySchema),
-    defaultValues: {
-      payment_scheme: undefined,
-    }
   });
+
+  const selectedPropertyType = watch('property_type_id');
+  const selectedPropertyTypeName = propertyTypes.find(type => type.id === selectedPropertyType)?.name;
+
+  useEffect(() => {
+    const fetchPropertyTypes = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('property_type')
+          .select('id, name')
+          .order('name');
+
+        if (error) throw error;
+        setPropertyTypes(data || []);
+      } catch (error) {
+        console.error('Error fetching property types:', error);
+        toast({
+          title: 'Error',
+          description: 'No se pudieron cargar los tipos de propiedad.',
+          variant: 'destructive',
+        });
+      }
+    };
+
+    const fetchBuildings = async () => {
+      if (!user) return;
+      
+      try {
+        const { data, error } = await supabase
+          .from('building')
+          .select('id, name')
+          .eq('owner_id', user.id)
+          .order('name');
+
+        if (error) throw error;
+        setBuildings(data || []);
+      } catch (error) {
+        console.error('Error fetching buildings:', error);
+      }
+    };
+
+    if (isOpen) {
+      fetchPropertyTypes();
+      fetchBuildings();
+    }
+  }, [user, isOpen, toast]);
 
   const onSubmit = async (data: PropertyFormData) => {
     if (!user) return;
 
     try {
       setIsLoading(true);
+      
+      const propertyData = {
+        owner_id: user.id,
+        name: data.name.trim(),
+        address: data.address.trim(),
+        monthly_rent: Number(data.monthly_rent),
+        property_type_id: data.property_type_id,
+        building_id: data.building_id || null,
+        active: false,
+      };
 
       const { error } = await supabase
         .from('properties')
-        .insert({
-          owner_id: user.id,
-          name: data.name.trim(),
-          address: data.address.trim(),
-          monthly_rent: Number(data.monthly_rent),
-          payment_scheme: data.payment_scheme,
-          active: true,
-        });
+        .insert([propertyData]);
 
       if (error) throw error;
 
@@ -162,40 +222,72 @@ export function AddPropertyDialog({ isOpen, onClose, onSuccess }: AddPropertyDia
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="payment_scheme" className="text-sm font-semibold text-gray-900">
-              Esquema de Pago
+            <Label htmlFor="property_type_id" className="text-sm font-semibold text-gray-900">
+              Tipo de Propiedad
             </Label>
-            <Select
-              onValueChange={(value: 'subscription' | 'flex') => setValue('payment_scheme', value)}
+            <Select 
+              onValueChange={(value) => setValue('property_type_id', value)}
+              defaultValue={selectedPropertyType}
             >
               <SelectTrigger 
-                className={`w-full bg-white text-gray-900 border ${errors.payment_scheme ? 'border-red-500' : 'border-gray-300'}`}
+                className={`w-full bg-white text-gray-900 border ${errors.property_type_id ? 'border-red-500' : 'border-gray-300'}`}
               >
-                <SelectValue placeholder="Selecciona un esquema de pago" />
+                <SelectValue placeholder="Selecciona el tipo de propiedad" />
               </SelectTrigger>
-              <SelectContent className="bg-white border border-gray-200 shadow-lg">
-                <SelectItem 
-                  value="subscription" 
-                  className="text-gray-900 hover:bg-gray-100 cursor-pointer focus:bg-gray-100 focus:text-gray-900"
-                >
-                  Suscripción
-                </SelectItem>
-                <SelectItem 
-                  value="flex" 
-                  className="text-gray-900 hover:bg-gray-100 cursor-pointer focus:bg-gray-100 focus:text-gray-900"
-                >
-                  Flex
-                </SelectItem>
+              <SelectContent 
+                className="bg-white border border-gray-200 shadow-lg"
+                position="popper"
+                sideOffset={4}
+              >
+                {propertyTypes.map((type) => (
+                  <SelectItem 
+                    key={type.id} 
+                    value={type.id}
+                    className="text-gray-900 hover:bg-gray-100 cursor-pointer"
+                  >
+                    {type.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
-            {errors.payment_scheme && (
-              <p className="text-sm text-red-600 font-medium">{errors.payment_scheme.message}</p>
+            {errors.property_type_id && (
+              <p className="text-sm text-red-600 font-medium">{errors.property_type_id.message}</p>
             )}
           </div>
 
+          {selectedPropertyTypeName === 'Departamento' && buildings.length > 0 && (
+            <div className="space-y-2">
+              <Label htmlFor="building_id" className="text-sm font-semibold text-gray-900">
+                Edificio (Opcional)
+              </Label>
+              <Select 
+                onValueChange={(value) => setValue('building_id', value)}
+              >
+                <SelectTrigger className="w-full bg-white text-gray-900 border border-gray-300">
+                  <SelectValue placeholder="Selecciona el edificio" />
+                </SelectTrigger>
+                <SelectContent 
+                  className="bg-white border border-gray-200 shadow-lg"
+                  position="popper"
+                  sideOffset={4}
+                >
+                  {buildings.map((building) => (
+                    <SelectItem 
+                      key={building.id} 
+                      value={building.id}
+                      className="text-gray-900 hover:bg-gray-100 cursor-pointer"
+                    >
+                      {building.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
           <Button
             type="submit"
-            className="w-full bg-[#00A86B] hover:bg-[#009060] text-white font-semibold py-2.5"
+            className="w-full bg-[#4CAF50] hover:bg-[#3d9140] text-white font-semibold py-2.5"
             disabled={isLoading}
           >
             {isLoading ? (

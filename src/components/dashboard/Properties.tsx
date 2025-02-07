@@ -42,7 +42,7 @@ export function Properties() {
           monthly_rent,
           payment_scheme,
           active,
-          tenants (
+          tenants!tenants_property_id_fkey (
             id,
             payments (
               amount,
@@ -90,28 +90,25 @@ export function Properties() {
   });
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Propiedades</h1>
-        <div className="flex items-center space-x-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <Input
-              type="text"
-              placeholder="Buscar propiedades..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 bg-white border-gray-200 w-64"
-            />
-          </div>
-          <Button 
-            onClick={() => setIsAddPropertyOpen(true)}
-            className="bg-[#4CAF50] hover:bg-[#3d9140] text-white"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Agregar Propiedad
-          </Button>
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="relative flex-1 w-full sm:max-w-xs">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+          <Input
+            type="text"
+            placeholder="Buscar propiedades..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 bg-white border-gray-200 w-full"
+          />
         </div>
+        <Button 
+          onClick={() => setIsAddPropertyOpen(true)}
+          className="bg-[#4CAF50] hover:bg-[#3d9140] text-white w-full sm:w-auto"
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          Agregar Propiedad
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
