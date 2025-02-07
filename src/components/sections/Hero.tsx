@@ -21,13 +21,6 @@ export function Hero() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
                 size="lg" 
-                className="h-14 bg-[#4CAF50] hover:bg-[#3d9140] text-white px-8 text-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center"
-                onClick={() => setIsAuthOpen(true)}
-              >
-                Comenzar Ahora <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-              <Button 
-                size="lg" 
                 variant="outline" 
                 className="h-14 bg-white text-[#323232] hover:text-white hover:bg-[#1B2956] border-2 border-[#1B2956] px-8 text-lg transition-colors shadow-lg hover:shadow-xl flex items-center justify-center"
               >

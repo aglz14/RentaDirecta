@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
 import { AddPropertyDialog } from './AddPropertyDialog';
+import { AddBuildingDialog } from './AddBuildingDialog';
 
 interface Property {
   id: string;
@@ -26,6 +27,7 @@ export function Properties() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [isAddPropertyOpen, setIsAddPropertyOpen] = useState(false);
+  const [isAddBuildingOpen, setIsAddBuildingOpen] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
 
@@ -102,13 +104,22 @@ export function Properties() {
             className="pl-10 bg-white border-gray-200 w-full"
           />
         </div>
-        <Button 
-          onClick={() => setIsAddPropertyOpen(true)}
-          className="bg-[#4CAF50] hover:bg-[#3d9140] text-white w-full sm:w-auto"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Agregar Propiedad
-        </Button>
+        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+          <Button 
+            onClick={() => setIsAddBuildingOpen(true)}
+            className="w-full sm:w-auto bg-[#1B2956] hover:bg-[#141d3d] text-white"
+          >
+            <Building2 className="h-4 w-4 mr-2" />
+            Agregar Edificio
+          </Button>
+          <Button 
+            onClick={() => setIsAddPropertyOpen(true)}
+            className="w-full sm:w-auto bg-[#4CAF50] hover:bg-[#3d9140] text-white"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            Agregar Propiedad
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -176,6 +187,12 @@ export function Properties() {
       <AddPropertyDialog
         isOpen={isAddPropertyOpen}
         onClose={() => setIsAddPropertyOpen(false)}
+        onSuccess={fetchProperties}
+      />
+
+      <AddBuildingDialog
+        isOpen={isAddBuildingOpen}
+        onClose={() => setIsAddBuildingOpen(false)}
         onSuccess={fetchProperties}
       />
     </div>
