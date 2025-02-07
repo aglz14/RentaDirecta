@@ -71,8 +71,7 @@ export function AddPropertyDialog({ isOpen, onClose, onSuccess }: AddPropertyDia
     resolver: zodResolver(propertySchema),
   });
 
-  const selectedPropertyType = watch('property_type_id');
-  const selectedPropertyTypeName = propertyTypes.find(type => type.id === selectedPropertyType)?.name;
+  const selectedPropertyTypeId = watch('property_type_id');
 
   useEffect(() => {
     const fetchPropertyTypes = async () => {
@@ -114,8 +113,9 @@ export function AddPropertyDialog({ isOpen, onClose, onSuccess }: AddPropertyDia
     if (isOpen) {
       fetchPropertyTypes();
       fetchBuildings();
+      reset();
     }
-  }, [user, isOpen, toast]);
+  }, [user, isOpen, toast, reset]);
 
   const onSubmit = async (data: PropertyFormData) => {
     if (!user) return;
@@ -130,7 +130,7 @@ export function AddPropertyDialog({ isOpen, onClose, onSuccess }: AddPropertyDia
         monthly_rent: Number(data.monthly_rent),
         property_type_id: data.property_type_id,
         building_id: data.building_id || null,
-        active: false,
+        active: true,
       };
 
       const { error } = await supabase
@@ -157,6 +157,11 @@ export function AddPropertyDialog({ isOpen, onClose, onSuccess }: AddPropertyDia
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const getPropertyTypeName = (id: string) => {
+    const propertyType = propertyTypes.find(type => type.id === id);
+    return propertyType?.name || 'Selecciona el tipo de propiedad';
   };
 
   return (
@@ -227,17 +232,19 @@ export function AddPropertyDialog({ isOpen, onClose, onSuccess }: AddPropertyDia
             </Label>
             <Select 
               onValueChange={(value) => setValue('property_type_id', value)}
-              defaultValue={selectedPropertyType}
+              value={selectedPropertyTypeId}
             >
               <SelectTrigger 
                 className={`w-full bg-white text-gray-900 border ${errors.property_type_id ? 'border-red-500' : 'border-gray-300'}`}
               >
-                <SelectValue placeholder="Selecciona el tipo de propiedad" />
+                <SelectValue placeholder="Selecciona el tipo de propiedad">
+                  {selectedPropertyTypeId ? getPropertyTypeName(selectedPropertyTypeId) : 'Selecciona el tipo de propiedad'}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent 
                 className="bg-white border border-gray-200 shadow-lg"
                 position="popper"
-                sideOffset={4}
+                sideOffset={8}
               >
                 {propertyTypes.map((type) => (
                   <SelectItem 
@@ -255,7 +262,7 @@ export function AddPropertyDialog({ isOpen, onClose, onSuccess }: AddPropertyDia
             )}
           </div>
 
-          {selectedPropertyTypeName === 'Departamento' && buildings.length > 0 && (
+          {selectedPropertyTypeId && getPropertyTypeName(selectedPropertyTypeId) === 'Departamento' && buildings.length > 0 && (
             <div className="space-y-2">
               <Label htmlFor="building_id" className="text-sm font-semibold text-gray-900">
                 Edificio (Opcional)
@@ -269,7 +276,7 @@ export function AddPropertyDialog({ isOpen, onClose, onSuccess }: AddPropertyDia
                 <SelectContent 
                   className="bg-white border border-gray-200 shadow-lg"
                   position="popper"
-                  sideOffset={4}
+                  sideOffset={8}
                 >
                   {buildings.map((building) => (
                     <SelectItem 
