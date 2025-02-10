@@ -1,7 +1,7 @@
-import { User2, LogOut, Home, Building2, Package, User } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
+import { User2, LogOut, Home, Building2, Package, User } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from "@/hooks/use-toast";
 
 export function LoggedInHeader() {
   const navigate = useNavigate();
@@ -21,16 +21,16 @@ export function LoggedInHeader() {
     try {
       await signOut();
       toast({
-        title: 'Sesión cerrada',
-        description: 'Has cerrado sesión correctamente.',
+        title: "Sesión cerrada",
+        description: "Has cerrado sesión correctamente.",
       });
-      navigate('/', { replace: true });
+      navigate("/", { replace: true });
     } catch (error) {
-      console.error('Error signing out:', error);
+      console.error("Error signing out:", error);
       toast({
-        title: 'Error',
-        description: 'No se pudo cerrar sesión. Por favor, intenta de nuevo.',
-        variant: 'destructive',
+        title: "Error",
+        description: "No se pudo cerrar sesión. Por favor, intenta de nuevo.",
+        variant: "destructive",
       });
     }
   };
@@ -40,28 +40,28 @@ export function LoggedInHeader() {
   };
 
   const getDisplayName = () => {
-    if (profile?.first_name && profile.first_name.trim() !== '') {
+    if (profile?.first_name && profile.first_name.trim() !== "") {
       return profile.first_name;
     }
-    
-    if (profile?.last_name && profile.last_name.trim() !== '') {
+
+    if (profile?.last_name && profile.last_name.trim() !== "") {
       return profile.last_name;
     }
-    
+
     if (profile?.email) {
-      const emailName = profile.email.split('@')[0];
+      const emailName = profile.email.split("@")[0];
       return emailName.charAt(0).toUpperCase() + emailName.slice(1);
     }
-    
-    const emailName = user?.email?.split('@')[0] || '';
+
+    const emailName = user?.email?.split("@")[0] || "";
     return emailName.charAt(0).toUpperCase() + emailName.slice(1);
   };
 
   const getFullName = () => {
     if (profile?.first_name || profile?.last_name) {
-      const firstName = profile.first_name?.trim() || '';
-      const lastName = profile.last_name?.trim() || '';
-      return [firstName, lastName].filter(Boolean).join(' ');
+      const firstName = profile.first_name?.trim() || "";
+      const lastName = profile.last_name?.trim() || "";
+      return [firstName, lastName].filter(Boolean).join(" ");
     }
     return getDisplayName();
   };
@@ -70,11 +70,14 @@ export function LoggedInHeader() {
     <header className="custom-header">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
-          <Link to="/" className="flex items-center space-x-4 hover:opacity-90 transition-opacity">
+          <Link
+            to="/"
+            className="flex items-center space-x-4 hover:opacity-90 transition-opacity"
+          >
             <div className="w-60 h-15 flex-shrink-0">
-              <img 
-                src="https://kgepsmcikgxoqjzhjxwq.supabase.co/storage/v1/object/public/logos//Blue%20.png" 
-                alt="RentaDirecta Logo" 
+              <img
+                src="https://kgepsmcikgxoqjzhjxwq.supabase.co/storage/v1/object/public/logos//Blue%20.png"
+                alt="RentaDirecta Logo"
                 className="w-full h-full object-cover rounded-lg"
               />
             </div>
@@ -82,49 +85,52 @@ export function LoggedInHeader() {
           <div className="flex items-center space-x-4">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="text-gray-300 hover:text-white flex items-center space-x-2">
+                <Button
+                  variant="ghost"
+                  className="text-gray-300 hover:text-white flex items-center space-x-2"
+                >
                   <User2 className="h-5 w-5" />
                   <span>{getDisplayName()}</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent 
-                align="end" 
+              <DropdownMenuContent
+                align="end"
                 className="w-56 bg-white rounded-md shadow-lg border border-gray-200"
               >
                 <DropdownMenuLabel className="font-semibold text-gray-900 px-3 py-2">
                   {getFullName()}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-gray-200" />
-                <DropdownMenuItem 
-                  onClick={() => handleNavigation('/panel')}
+                <DropdownMenuItem
+                  onClick={() => handleNavigation("/panel")}
                   className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center"
                 >
                   <Home className="h-4 w-4 mr-2" />
                   Panel
                 </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={() => handleNavigation('/administracion')}
+                <DropdownMenuItem
+                  onClick={() => handleNavigation("/administracion")}
                   className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center"
                 >
                   <Building2 className="h-4 w-4 mr-2" />
                   Administración
                 </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={() => handleNavigation('/mobiliario')}
+                <DropdownMenuItem
+                  onClick={() => handleNavigation("/mobiliario")}
                   className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center"
                 >
                   <Package className="h-4 w-4 mr-2" />
                   Mobiliario
                 </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={() => handleNavigation('/cuenta')}
+                <DropdownMenuItem
+                  onClick={() => handleNavigation("/cuenta")}
                   className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center"
                 >
                   <User className="h-4 w-4 mr-2" />
                   Cuenta
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-gray-200" />
-                <DropdownMenuItem 
+                <DropdownMenuItem
                   onClick={handleSignOut}
                   className="px-3 py-2 text-red-600 hover:bg-red-50 cursor-pointer flex items-center"
                 >
