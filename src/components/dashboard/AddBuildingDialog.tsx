@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -24,6 +25,15 @@ const buildingSchema = z.object({
   address: z.string()
     .min(5, 'La dirección debe tener al menos 5 caracteres')
     .max(200, 'La dirección no puede exceder 200 caracteres'),
+  city: z.string()
+    .min(2, 'La ciudad debe tener al menos 2 caracteres')
+    .max(100, 'La ciudad no puede exceder 100 caracteres'),
+  state: z.string()
+    .min(2, 'El estado debe tener al menos 2 caracteres')
+    .max(100, 'El estado no puede exceder 100 caracteres'),
+  country: z.string()
+    .min(2, 'El país debe tener al menos 2 caracteres')
+    .max(100, 'El país no puede exceder 100 caracteres'),
 });
 
 type BuildingFormData = z.infer<typeof buildingSchema>;
@@ -53,6 +63,9 @@ export function AddBuildingDialog({ isOpen, onClose, onSuccess }: AddBuildingDia
         owner_id: user.id,
         name: data.name.trim(),
         address: data.address.trim(),
+        city: data.city.trim(),
+        state: data.state.trim(),
+        country: data.country.trim(),
       };
 
       const { error } = await supabase
@@ -116,7 +129,7 @@ export function AddBuildingDialog({ isOpen, onClose, onSuccess }: AddBuildingDia
             </Label>
             <Input
               id="address"
-              placeholder="Ej: Av. Principal 123, Col. Centro"
+              placeholder="Ej: Av. Principal 123"
               {...register('address')}
               className={`bg-white text-gray-900 placeholder:text-gray-500 ${errors.address ? 'border-red-500' : 'border-gray-300'}`}
             />
@@ -125,9 +138,54 @@ export function AddBuildingDialog({ isOpen, onClose, onSuccess }: AddBuildingDia
             )}
           </div>
 
+          <div className="space-y-2">
+            <Label htmlFor="city" className="text-sm font-semibold text-gray-900">
+              Ciudad
+            </Label>
+            <Input
+              id="city"
+              placeholder="Ej: Monterrey"
+              {...register('city')}
+              className={`bg-white text-gray-900 placeholder:text-gray-500 ${errors.city ? 'border-red-500' : 'border-gray-300'}`}
+            />
+            {errors.city && (
+              <p className="text-sm text-red-600 font-medium">{errors.city.message}</p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="state" className="text-sm font-semibold text-gray-900">
+              Estado
+            </Label>
+            <Input
+              id="state"
+              placeholder="Ej: Nuevo León"
+              {...register('state')}
+              className={`bg-white text-gray-900 placeholder:text-gray-500 ${errors.state ? 'border-red-500' : 'border-gray-300'}`}
+            />
+            {errors.state && (
+              <p className="text-sm text-red-600 font-medium">{errors.state.message}</p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="country" className="text-sm font-semibold text-gray-900">
+              País
+            </Label>
+            <Input
+              id="country"
+              placeholder="Ej: México"
+              {...register('country')}
+              className={`bg-white text-gray-900 placeholder:text-gray-500 ${errors.country ? 'border-red-500' : 'border-gray-300'}`}
+            />
+            {errors.country && (
+              <p className="text-sm text-red-600 font-medium">{errors.country.message}</p>
+            )}
+          </div>
+
           <Button
             type="submit"
-            className="w-full bg-[#4CAF50] hover:bg-[#3d9140] text-white font-semibold py-2.5"
+            className="w-full bg-[#1B2956] hover:bg-[#141d3d] text-white font-semibold py-2.5"
             disabled={isLoading}
           >
             {isLoading ? (
