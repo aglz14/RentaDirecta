@@ -1,9 +1,11 @@
+
 import { useState, useEffect } from 'react';
 import { Building2, MapPin, CreditCard, Users, Plus, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
@@ -20,6 +22,7 @@ interface Property {
   tenant_count: number;
   total_income: number;
   next_payment_date: string | null;
+  building_id?: string;
 }
 
 interface Building {
@@ -33,6 +36,7 @@ export function Properties() {
   const [buildings, setBuildings] = useState<Building[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedBuilding, setSelectedBuilding] = useState<string>('');
   const [isAddPropertyOpen, setIsAddPropertyOpen] = useState(false);
   const [isAddBuildingOpen, setIsAddBuildingOpen] = useState(false);
   const { user } = useAuth();
@@ -62,6 +66,7 @@ export function Properties() {
           monthly_rent,
           payment_scheme,
           active,
+          building_id,
           tenants!tenants_property_id_fkey (
             id,
             payments (
@@ -103,32 +108,39 @@ export function Properties() {
 
   const filteredProperties = properties.filter(property => {
     const searchLower = searchTerm.toLowerCase();
-    return (
-      property.name.toLowerCase().includes(searchLower) ||
-      property.address.toLowerCase().includes(searchLower)
-    );
-  });
-
-  const filteredBuildings = buildings.filter(building => {
-    const searchLower = searchTerm.toLowerCase();
-    return (
-      building.name.toLowerCase().includes(searchLower) ||
-      building.address.toLowerCase().includes(searchLower)
-    );
+    const matchesSearch = property.name.toLowerCase().includes(searchLower) ||
+      property.address.toLowerCase().includes(searchLower);
+    const matchesBuilding = !selectedBuilding || property.building_id === selectedBuilding;
+    return matchesSearch && matchesBuilding;
   });
 
   return (
     <div className="space-y-12">
-      {/* Search Bar */}
-      <div className="relative w-full sm:max-w-xs">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-        <Input
-          type="text"
-          placeholder="Buscar..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="pl-10 bg-white border-gray-200 w-full"
-        />
+      {/* Search and Filter Bar */}
+      <div className="flex flex-col sm:flex-row gap-4">
+        <div className="relative flex-1 w-full sm:max-w-xs">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+          <Input
+            type="text"
+            placeholder="Buscar..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 bg-white border-gray-200 w-full"
+          />
+        </div>
+        <Select value={selectedBuilding} onValueChange={setSelectedBuilding}>
+          <SelectTrigger className="w-full sm:w-[200px] bg-white">
+            <SelectValue placeholder="Filtrar por edificio" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="">Todos los edificios</SelectItem>
+            {buildings.map((building) => (
+              <SelectItem key={building.id} value={building.id}>
+                {building.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Buildings Section */}
@@ -145,7 +157,7 @@ export function Properties() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredBuildings.map((building) => (
+          {buildings.map((building) => (
             <Card key={building.id} className="hover:shadow-lg transition-shadow">
               <CardHeader className="pb-4">
                 <div className="flex justify-between items-start">
