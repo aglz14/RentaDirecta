@@ -39,14 +39,18 @@ export function Buildings() {
         .select(`
           id,
           name,
-          address,
+          street,
+          exterior_number,
+          interior_number,
+          neighborhood,
+          zip_code,
           city,
           state,
           country,
           properties (
             id,
             area,
-            tenants (
+            tenants!tenants_property_id_fkey (
               id
             )
           )
