@@ -76,12 +76,15 @@ export function AddBuildingDialog({ isOpen, onClose, onSuccess }: AddBuildingDia
       const buildingData = {
         owner_id: user.id,
         name: data.name.trim(),
-        address: address.trim(),
+        street: data.street.trim(),
+        exterior_number: data.exterior_number.trim(),
+        interior_number: data.interior_number?.trim() || null,
         neighborhood: data.neighborhood.trim(),
         zip_code: data.zip_code.trim(),
         city: data.city.trim(),
         state: data.state.trim(),
         country: data.country.trim(),
+        address: `${data.street.trim()} ${data.exterior_number.trim()}${data.interior_number ? ` Int. ${data.interior_number.trim()}` : ''}, ${data.neighborhood.trim()}, ${data.zip_code.trim()}`
       };
 
       const { error } = await supabase
