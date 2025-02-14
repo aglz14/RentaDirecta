@@ -122,7 +122,7 @@ export function AddBuildingDialog({ isOpen, onClose, onSuccess }: AddBuildingDia
         </DialogClose>
         <DialogHeader>
           <DialogTitle className="text-center text-2xl font-bold text-gray-900">
-            Agregar Nuevo Edificio
+            Agregar Nuevo Inmueble
           </DialogTitle>
         </DialogHeader>
 

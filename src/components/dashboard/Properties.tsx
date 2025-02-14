@@ -129,7 +129,7 @@ export function Properties() {
         </div>
         <Select value={selectedBuilding} onValueChange={setSelectedBuilding}>
           <SelectTrigger className="w-full sm:w-[200px] bg-white">
-            <SelectValue placeholder="Filtrar por edificio" />
+            <SelectValue placeholder="Filtrar por inmueble" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="">Todos los edificios</SelectItem>

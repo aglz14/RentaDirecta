@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Building2, MapPin, Plus, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -113,7 +112,7 @@ export function Buildings() {
           className="bg-[#1B2956] hover:bg-[#141d3d] text-white w-full sm:w-auto"
         >
           <Plus className="h-4 w-4 mr-2" />
-          Agregar Edificio
+          Agregar Inmueble
         </Button>
       </div>
 
