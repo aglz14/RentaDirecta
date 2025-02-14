@@ -45,14 +45,7 @@ export function Buildings() {
           zip_code,
           city,
           state,
-          country,
-          properties (
-            id,
-            area,
-            tenants!tenants_property_id_fkey (
-              id
-            )
-          )
+          country
         `)
         .eq('owner_id', user.id)
         .order('created_at', { ascending: false });
@@ -125,26 +118,21 @@ export function Buildings() {
                   <CardTitle className="text-xl font-bold text-gray-900">{building.name}</CardTitle>
                   <div className="flex items-center text-gray-600 mt-1">
                     <MapPin className="h-4 w-4 mr-1" />
-                    <span className="text-sm">{building.address}</span>
+                    <span className="text-sm">
+                      {building.street} {building.exterior_number}
+                      {building.interior_number ? `, Int. ${building.interior_number}` : ''}
+                    </span>
                   </div>
                 </div>
               </div>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm text-gray-600">Unidades</p>
-                    <p className="text-lg font-semibold text-gray-900">
-                      {building.occupied_units}/{building.total_units}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600">Área (m²)</p>
-                    <p className="text-lg font-semibold text-gray-900">
-                      {building.occupied_area}/{building.total_area}
-                    </p>
-                  </div>
+                <div className="grid grid-cols-1 gap-2">
+                  <p className="text-sm text-gray-600">{building.neighborhood}</p>
+                  <p className="text-sm text-gray-600">{building.zip_code}</p>
+                  <p className="text-sm text-gray-600">{building.city}, {building.state}</p>
+                  <p className="text-sm text-gray-600">{building.country}</p>
                 </div>
                 <Button 
                   variant="outline" 
