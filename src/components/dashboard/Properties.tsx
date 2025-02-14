@@ -61,11 +61,18 @@ export function Properties() {
         .select(`
           id,
           name,
-          address,
+          area,
           monthly_rent,
           payment_scheme,
           active,
-          building_id,
+          building:building_id (
+            id,
+            name,
+            street,
+            exterior_number,
+            interior_number,
+            neighborhood
+          ),
           tenants!tenants_property_id_fkey (
             id,
             payments (
@@ -74,6 +81,7 @@ export function Properties() {
             )
           )
         `)
+        .not('building_id', 'is', null)
         .eq('owner_id', user.id)
         .order('created_at', { ascending: false });
 
@@ -204,7 +212,11 @@ export function Properties() {
                     <CardTitle className="text-xl font-bold text-gray-900">{property.name}</CardTitle>
                     <div className="flex items-center text-gray-600 mt-1">
                       <MapPin className="h-4 w-4 mr-1" />
-                      <span className="text-sm">{property.address}</span>
+                      <span className="text-sm">
+                        {property.building?.name} - {property.building?.street} {property.building?.exterior_number}
+                        {property.building?.interior_number ? `, Int. ${property.building?.interior_number}` : ''}, 
+                        {property.building?.neighborhood}
+                      </span>
                     </div>
                   </div>
                   <Badge variant="outline" className={
