@@ -1,34 +1,16 @@
 import { useState } from 'react';
-import { Building2, Calendar, MapPin, X } from "lucide-react";
+import { Building2, Calendar, MapPin } from "lucide-react";
 import { Property } from "@/types";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogClose,
-} from "@/components/ui/dialog";
-import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/lib/supabase';
+import { useNavigate } from "react-router-dom";
 
 interface PropertyCardProps {
   property: Property;
 }
 
-interface PropertyDetails extends Property {
-  property_type?: {
-    name: string;
-  };
-  building?: {
-    name: string;
-    address: string;
-  } | null;
-}
-
-export function PropertyCard({ property }: { property: Property }) {
+export function PropertyCard({ property }: PropertyCardProps) {
   const navigate = useNavigate();
   const formatCurrency = (amount: number | null | undefined): string => {
     if (amount == null) return '$0.00';
