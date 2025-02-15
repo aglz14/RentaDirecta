@@ -1,5 +1,4 @@
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -68,10 +67,34 @@ interface AddBuildingDialogProps {
 
 export function AddBuildingDialog({ isOpen, onClose, onSuccess }: AddBuildingDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const [buildingTypes, setBuildingTypes] = useState<Array<{ id: number; name: string; value: string }>>([]);
   const { user } = useAuth();
   const { toast } = useToast();
-  
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<BuildingFormData>({
+
+  useEffect(() => {
+    const fetchBuildingTypes = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('building_types')
+          .select('id, name, value')
+          .order('name');
+
+        if (error) throw error;
+        setBuildingTypes(data || []);
+      } catch (error) {
+        console.error('Error fetching building types:', error);
+        toast({
+          title: 'Error',
+          description: 'No se pudieron cargar los tipos de inmuebles.',
+          variant: 'destructive',
+        });
+      }
+    };
+
+    fetchBuildingTypes();
+  }, []);
+
+  const { register, handleSubmit, formState: { errors }, setValue } = useForm<BuildingFormData>({
     resolver: zodResolver(buildingSchema),
   });
 
@@ -80,9 +103,9 @@ export function AddBuildingDialog({ isOpen, onClose, onSuccess }: AddBuildingDia
 
     try {
       setIsLoading(true);
-      
+
       const address = `${data.street} ${data.exterior_number}${data.interior_number ? ` Int. ${data.interior_number}` : ''}, ${data.neighborhood}, ${data.zip_code}`;
-      
+
       const buildingData = {
         owner_id: user.id,
         name: data.name.trim(),
@@ -153,7 +176,7 @@ export function AddBuildingDialog({ isOpen, onClose, onSuccess }: AddBuildingDia
                 <p className="text-sm text-red-600 font-medium">{errors.name.message}</p>
               )}
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="building_type" className="text-sm font-semibold text-gray-900">
                 Tipo de Inmueble
@@ -163,11 +186,9 @@ export function AddBuildingDialog({ isOpen, onClose, onSuccess }: AddBuildingDia
                   <SelectValue placeholder="Selecciona el tipo" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="apartment">Edificio de Apartamentos</SelectItem>
-                  <SelectItem value="office">Edificio de Oficinas</SelectItem>
-                  <SelectItem value="commercial">Edificio Comercial</SelectItem>
-                  <SelectItem value="mixed">Uso Mixto</SelectItem>
-                  <SelectItem value="other">Otro</SelectItem>
+                  {buildingTypes.map((type) => (
+                    <SelectItem key={type.id} value={type.value}>{type.name}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               {errors.building_type && (
