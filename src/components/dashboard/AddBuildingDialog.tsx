@@ -90,8 +90,8 @@ export function AddBuildingDialog({
     const fetchBuildingTypes = async () => {
       try {
         const { data, error } = await supabase
-          .from("public.building_types")
-          .select("*")
+          .from("building_types")
+          .select("id, name, value")
           .order("name");
 
         if (error) {
