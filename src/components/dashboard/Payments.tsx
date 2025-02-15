@@ -70,8 +70,10 @@ export function Payments() {
             )
           ),
           tenant:tenants!inner (
-            first_name,
-            last_name
+            profile:profiles!inner (
+              first_name,
+              last_name
+            )
           )
         `,
         )
@@ -133,7 +135,7 @@ export function Payments() {
   const filteredPayments = payments.filter((payment) => {
     const searchLower = searchTerm.toLowerCase();
     const tenantName =
-      `${payment.tenant.first_name} ${payment.tenant.last_name}`.toLowerCase();
+      `${payment.tenant.profile.first_name} ${payment.tenant.profile.last_name}`.toLowerCase();
     return (
       tenantName.includes(searchLower) ||
       payment.property.name.toLowerCase().includes(searchLower)
@@ -248,8 +250,8 @@ export function Payments() {
               {filteredPayments.map((payment) => (
                 <TableRow key={payment.id} className="hover:bg-gray-50">
                   <TableCell className="font-medium">
-                    {payment.tenant?.profile?.first_name}{" "}
-                    {payment.tenant?.profile?.last_name}
+                    {payment.tenant.profile.first_name}{" "}
+                    {payment.tenant.profile.last_name}
                   </TableCell>
                   <TableCell>{payment.property?.building?.name} - {payment.property?.name}</TableCell>
                   <TableCell>{payment.property?.unit_number}</TableCell>
