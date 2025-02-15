@@ -84,7 +84,7 @@ export function PropertyUnitInfo({ property }: PropertyUnitInfoProps) {
           <div className="space-y-4">
             <div>
               <p className="text-sm text-gray-500">Propietario</p>
-              <p className="font-medium">{property.owner_name}</p>
+              <p className="font-medium">{`${property.owner.first_name} ${property.owner.last_name}`}</p>
             </div>
 
             <div className="flex items-center gap-2">
@@ -92,10 +92,10 @@ export function PropertyUnitInfo({ property }: PropertyUnitInfoProps) {
               <div>
                 <p className="text-sm text-gray-500">Email del Propietario</p>
                 <a 
-                  href={`mailto:${property.owner_email}`}
+                  href={`mailto:${property.owner.email}`}
                   className="font-medium text-blue-600 hover:text-blue-800"
                 >
-                  {property.owner_email}
+                  {property.owner.email}
                 </a>
               </div>
             </div>

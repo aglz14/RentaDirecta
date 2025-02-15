@@ -28,8 +28,11 @@ interface Property {
   state: string;
   country: string;
   currency: string;
-  owner_name: string;
-  owner_email: string;
+  owner: {
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
   predial?: string | null;
 }
 
@@ -65,6 +68,11 @@ export default function PropertyUnit() {
             *,
             property_types (
               name
+            ),
+            owner:profiles!properties_owner_id_fkey (
+              first_name,
+              last_name,
+              email
             )
           `)
           .eq('id', id)
