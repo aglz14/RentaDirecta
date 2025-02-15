@@ -75,23 +75,26 @@ export function AddBuildingDialog({ isOpen, onClose, onSuccess }: AddBuildingDia
     const fetchBuildingTypes = async () => {
       try {
         const { data, error } = await supabase
-          .from('building_types')
-          .select('id, name, value')
+          .from('public.building_types')
+          .select('*')
           .order('name');
 
         if (error) {
           console.error('Supabase error:', error);
-          throw error;
+          toast({
+            title: 'Error',
+            description: 'No se pudieron cargar los tipos de inmuebles',
+            variant: 'destructive',
+          });
+          return;
         }
         
         if (!data || data.length === 0) {
           console.warn('No building types found');
+          return;
         }
         
-        setBuildingTypes(data || []);
-
-        if (error) throw error;
-        setBuildingTypes(data || []);
+        setBuildingTypes(data);
       } catch (error) {
         console.error('Error fetching building types:', error);
         toast({
