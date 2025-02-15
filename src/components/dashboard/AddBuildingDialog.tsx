@@ -153,11 +153,12 @@ export function AddBuildingDialog({
         city: data.city.trim(),
         state: data.state.trim(),
         country: data.country.trim(),
-        address: `${data.street.trim()} ${data.exterior_number.trim()}${data.interior_number ? ` Int. ${data.interior_number.trim()}` : ""}, ${data.neighborhood.trim()}, ${data.zip_code.trim()}, ${data.city.trim()}, ${data.state.trim()}`
+        address: `${data.street.trim()} ${data.exterior_number.trim()}${data.interior_number ? ` Int. ${data.interior_number.trim()}` : ""}, ${data.neighborhood.trim()}, ${data.zip_code.trim()}, ${data.city.trim()}, ${data.state.trim()}, ${data.country.trim()}`
       };
 
+      console.log('Building data to insert:', buildingData);
       const { error } = await supabase
-        .from("buildings")
+        .from('buildings')
         .insert([buildingData]);
 
       if (error) throw error;
