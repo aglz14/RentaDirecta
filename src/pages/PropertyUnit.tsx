@@ -88,7 +88,6 @@ export default function PropertyUnit() {
               last_name,
               email,
               whatsapp,
-              identification,
               phone
             )
           `)
