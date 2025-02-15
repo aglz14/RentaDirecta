@@ -9,6 +9,7 @@ import { PropertyUnitTenants } from '@/components/property-unit/PropertyUnitTena
 import { PropertyUnitDocuments } from '@/components/property-unit/PropertyUnitDocuments';
 import { PropertyUnitPayments } from '@/components/property-unit/PropertyUnitPayments';
 import { PropertyUnitMaintenance } from '@/components/property-unit/PropertyUnitMaintenance';
+import { BuildingDistribution } from '@/components/buildings/BuildingDistribution';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 
@@ -153,6 +154,7 @@ export default function PropertyUnit() {
           <div className="space-y-6">
             <PropertyUnitHeader property={property} />
             <PropertyUnitInfo property={property} />
+            <BuildingDistribution />
             <PropertyUnitTenants tenants={tenants} />
             <PropertyUnitDocuments />
             <PropertyUnitPayments />
