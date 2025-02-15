@@ -88,7 +88,7 @@ export default function PropertyUnit() {
               last_name,
               email,
               whatsapp,
-              phone
+              user_type
             )
           `)
           .eq('property_id', id)

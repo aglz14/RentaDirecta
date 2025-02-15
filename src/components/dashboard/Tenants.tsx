@@ -13,7 +13,8 @@ interface Tenant {
     first_name: string;
     last_name: string;
     email: string;
-    whatsapp: string;
+    whatsapp: string | null;
+    user_type: string;
   };
   property: {
     name: string;
