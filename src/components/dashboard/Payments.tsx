@@ -65,7 +65,10 @@ export function Payments() {
           status,
           property:properties!inner (
             name,
-            unit_number
+            unit_number,
+            building:buildings!inner (
+              name
+            )
           ),
           tenant:tenants!inner (
             profile:profiles!inner (
@@ -251,7 +254,7 @@ export function Payments() {
                     {payment.tenant?.profile?.first_name}{" "}
                     {payment.tenant?.profile?.last_name}
                   </TableCell>
-                  <TableCell>{payment.property?.name}</TableCell>
+                  <TableCell>{payment.property?.building?.name} - {payment.property?.name}</TableCell>
                   <TableCell>{payment.property?.unit_number}</TableCell>
                   <TableCell>
                     {new Date(payment.date).toLocaleDateString("es-MX", {
