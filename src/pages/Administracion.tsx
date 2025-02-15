@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { DashboardNav } from '@/components/dashboard/DashboardNav';
-import { Properties } from '@/components/dashboard/Properties';
+import { Units } from '@/components/dashboard/Units';
 import { Tenants } from '@/components/dashboard/Tenants';
 import { Payments } from '@/components/dashboard/Payments';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -123,7 +123,7 @@ export default function Administracion() {
               <Buildings />
             </TabsContent>
             <TabsContent value="units">
-              <Properties properties={filteredProperties} isLoading={isLoading} setSearchTerm={setSearchTerm}/>
+              <Units properties={filteredProperties} isLoading={isLoading} setSearchTerm={setSearchTerm}/>
             </TabsContent>
             <TabsContent value="tenants">
               <Tenants />
