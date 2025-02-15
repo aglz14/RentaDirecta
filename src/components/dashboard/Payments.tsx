@@ -27,7 +27,7 @@ interface Payment {
   property_id: string;
   amount: number;
   date: string;
-  method: "transfer" | "debit" | "credit" | "convenience" | "subscription";
+  payment_method: "transfer" | "debit" | "credit" | "convenience" | "subscription";
   status: "pending" | "completed" | "failed";
   property: {
     name: string;
@@ -263,13 +263,13 @@ export function Payments() {
                     })}
                   </TableCell>
                   <TableCell>
-                    {payment.method === "transfer"
+                    {payment.payment_method === "transfer"
                       ? "Transferencia"
-                      : payment.method === "debit"
+                      : payment.payment_method === "debit"
                         ? "Débito"
-                        : payment.method === "credit"
+                        : payment.payment_method === "credit"
                           ? "Crédito"
-                          : payment.method === "convenience"
+                          : payment.payment_method === "convenience"
                             ? "Tienda"
                             : "Suscripción"}
                   </TableCell>
