@@ -13,6 +13,7 @@ interface Payment {
   amount: number;
   date: string;
   status: 'pending' | 'completed' | 'failed';
+  payment_method: string;
   tenants: {
     profile: {
       first_name: string;
@@ -22,6 +23,10 @@ interface Payment {
   property: {
     name: string;
     monthly_rent: number;
+  };
+  unit: {
+    name: string;
+    unit_number: string;
   };
 }
 
@@ -200,8 +205,10 @@ export function Payments() {
             <TableHeader>
               <TableRow>
                 <TableHead>Inquilino</TableHead>
-                <TableHead>Propiedad</TableHead>
+                <TableHead>Inmueble</TableHead>
+                <TableHead>Unidad</TableHead>
                 <TableHead>Fecha</TableHead>
+                <TableHead>Método de Pago</TableHead>
                 <TableHead>Monto</TableHead>
                 <TableHead>Estado</TableHead>
               </TableRow>
@@ -213,6 +220,7 @@ export function Payments() {
                     {payment.tenants.profile.first_name} {payment.tenants.profile.last_name}
                   </TableCell>
                   <TableCell>{payment.property.name}</TableCell>
+                  <TableCell>{payment.unit.unit_number}</TableCell>
                   <TableCell>
                     {new Date(payment.date).toLocaleDateString('es-MX', {
                       year: 'numeric',
@@ -220,6 +228,7 @@ export function Payments() {
                       day: 'numeric'
                     })}
                   </TableCell>
+                  <TableCell>{payment.payment_method}</TableCell>
                   <TableCell>
                     ${payment.amount.toLocaleString('es-MX')}
                   </TableCell>
