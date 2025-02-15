@@ -49,13 +49,11 @@ export function Payments() {
           date,
           method,
           status,
-          property:properties (
+          property:properties!inner (
             name,
-            unit:units (
-              unit_number
-            )
+            unit_number
           ),
-          tenant:profiles (
+          tenant:profiles!inner (
             first_name,
             last_name
           )
@@ -221,7 +219,7 @@ export function Payments() {
                     {payment.tenant?.first_name} {payment.tenant?.last_name}
                   </TableCell>
                   <TableCell>{payment.property?.name}</TableCell>
-                  <TableCell>{payment.property?.unit?.unit_number}</TableCell>
+                  <TableCell>{payment.property?.unit_number}</TableCell>
                   <TableCell>
                     {new Date(payment.date).toLocaleDateString('es-MX', {
                       year: 'numeric',
