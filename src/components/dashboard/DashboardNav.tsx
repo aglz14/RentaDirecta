@@ -15,7 +15,7 @@ export function DashboardNav() {
 
   const navItems = [
     { path: '/panel', icon: Home, label: 'Panel' },
-    { path: '/administracion', icon: Building2, label: 'Unidades' },
+    { path: '/administracion', icon: Building2, label: 'Administración' },
     { path: '/mobiliario', icon: Package, label: 'Mobiliario' },
     { path: '/cuenta', icon: User, label: 'Cuenta' },
   ];
