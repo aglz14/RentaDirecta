@@ -82,13 +82,16 @@ export default function PropertyUnit() {
             payment_scheme,
             last_payment_date,
             created_at,
-            status,
             profile:profiles!tenants_profile_id_fkey (
               first_name,
               last_name,
               email,
               whatsapp,
               user_type
+            ),
+            property:properties!tenants_property_id_fkey (
+              name,
+              monthly_rent
             )
           `)
           .eq('property_id', id)
