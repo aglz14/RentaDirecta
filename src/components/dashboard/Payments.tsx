@@ -1,12 +1,25 @@
-import { useState, useEffect } from 'react';
-import { Calendar, DollarSign, ArrowUpRight, ArrowDownRight, Search } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Input } from '@/components/ui/input';
-import { Progress } from '@/components/ui/progress';
-import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/lib/supabase';
+import { useState, useEffect } from "react";
+import {
+  Calendar,
+  DollarSign,
+  ArrowUpRight,
+  ArrowDownRight,
+  Search,
+} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/lib/supabase";
 
 interface Payment {
   id: string;
@@ -14,8 +27,8 @@ interface Payment {
   property_id: string;
   amount: number;
   date: string;
-  method: 'transfer' | 'debit' | 'credit' | 'convenience' | 'subscription';
-  status: 'pending' | 'completed' | 'failed';
+  method: "transfer" | "debit" | "credit" | "convenience" | "subscription";
+  status: "pending" | "completed" | "failed";
   property: {
     name: string;
     unit: {
@@ -31,7 +44,7 @@ interface Payment {
 export function Payments() {
   const [payments, setPayments] = useState<Payment[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const { user } = useAuth();
   const { toast } = useToast();
 
@@ -40,14 +53,15 @@ export function Payments() {
       if (!user) return;
 
       const { data, error } = await supabase
-        .from('payments')
-        .select(`
+        .from("payments")
+        .select(
+          `
           id,
           tenant_id,
           property_id,
           amount,
           date,
-          method,
+          payment_method,
           status,
           property:properties!inner (
             name,
@@ -59,18 +73,20 @@ export function Payments() {
               last_name
             )
           )
-        `)
-        .order('date', { ascending: false });
+        `,
+        )
+        .order("date", { ascending: false });
 
       if (error) throw error;
 
       setPayments(data);
     } catch (error) {
-      console.error('Error fetching payments:', error);
+      console.error("Error fetching payments:", error);
       toast({
-        title: 'Error',
-        description: 'No se pudieron cargar los pagos. Por favor, intenta de nuevo.',
-        variant: 'destructive',
+        title: "Error",
+        description:
+          "No se pudieron cargar los pagos. Por favor, intenta de nuevo.",
+        variant: "destructive",
       });
     } finally {
       setIsLoading(false);
@@ -81,44 +97,59 @@ export function Payments() {
     fetchPayments();
   }, [user]);
 
-  const totalIncome = payments.reduce((sum, payment) => 
-    payment.status === 'completed' ? sum + payment.amount : sum, 0
+  const totalIncome = payments.reduce(
+    (sum, payment) =>
+      payment.status === "completed" ? sum + payment.amount : sum,
+    0,
   );
 
-  const pendingAmount = payments.reduce((sum, payment) => 
-    payment.status === 'pending' ? sum + payment.amount : sum, 0
+  const pendingAmount = payments.reduce(
+    (sum, payment) =>
+      payment.status === "pending" ? sum + payment.amount : sum,
+    0,
   );
 
-  const currentMonthPayments = payments.filter(payment => {
+  const currentMonthPayments = payments.filter((payment) => {
     const paymentDate = new Date(payment.date);
     const now = new Date();
-    return paymentDate.getMonth() === now.getMonth() && 
-           paymentDate.getFullYear() === now.getFullYear();
+    return (
+      paymentDate.getMonth() === now.getMonth() &&
+      paymentDate.getFullYear() === now.getFullYear()
+    );
   });
 
-  const monthlyProgress = (currentMonthPayments.reduce((sum, payment) => 
-    payment.status === 'completed' ? sum + payment.amount : sum, 0
-  ) / (currentMonthPayments.reduce((sum, payment) => sum + payment.property.monthly_rent, 0))) * 100;
+  const monthlyProgress =
+    (currentMonthPayments.reduce(
+      (sum, payment) =>
+        payment.status === "completed" ? sum + payment.amount : sum,
+      0,
+    ) /
+      currentMonthPayments.reduce(
+        (sum, payment) => sum + payment.property.monthly_rent,
+        0,
+      )) *
+    100;
 
-  const filteredPayments = payments.filter(payment => {
+  const filteredPayments = payments.filter((payment) => {
     const searchLower = searchTerm.toLowerCase();
-    const tenantName = `${payment.tenants.profile.first_name} ${payment.tenants.profile.last_name}`.toLowerCase();
+    const tenantName =
+      `${payment.tenants.profile.first_name} ${payment.tenants.profile.last_name}`.toLowerCase();
     return (
       tenantName.includes(searchLower) ||
       payment.property.name.toLowerCase().includes(searchLower)
     );
   });
 
-  const getStatusColor = (status: Payment['status']) => {
+  const getStatusColor = (status: Payment["status"]) => {
     switch (status) {
-      case 'completed':
-        return 'text-green-600';
-      case 'pending':
-        return 'text-yellow-600';
-      case 'failed':
-        return 'text-red-600';
+      case "completed":
+        return "text-green-600";
+      case "pending":
+        return "text-yellow-600";
+      case "failed":
+        return "text-red-600";
       default:
-        return 'text-gray-600';
+        return "text-gray-600";
     }
   };
 
@@ -126,7 +157,7 @@ export function Payments() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-6">Pagos</h1>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -137,7 +168,7 @@ export function Payments() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-gray-900">
-                ${totalIncome.toLocaleString('es-MX')}
+                ${totalIncome.toLocaleString("es-MX")}
               </div>
               <p className="text-xs text-green-600 flex items-center mt-1">
                 <ArrowUpRight className="h-4 w-4 mr-1" />
@@ -155,11 +186,10 @@ export function Payments() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-gray-900">
-                ${pendingAmount.toLocaleString('es-MX')}
+                ${pendingAmount.toLocaleString("es-MX")}
               </div>
               <p className="text-xs text-red-600 flex items-center mt-1">
-                <ArrowDownRight className="h-4 w-4 mr-1" />
-                3 pagos por cobrar
+                <ArrowDownRight className="h-4 w-4 mr-1" />3 pagos por cobrar
               </p>
             </CardContent>
           </Card>
@@ -218,29 +248,38 @@ export function Payments() {
               {filteredPayments.map((payment) => (
                 <TableRow key={payment.id} className="hover:bg-gray-50">
                   <TableCell className="font-medium">
-                    {payment.tenant?.profile?.first_name} {payment.tenant?.profile?.last_name}
+                    {payment.tenant?.profile?.first_name}{" "}
+                    {payment.tenant?.profile?.last_name}
                   </TableCell>
                   <TableCell>{payment.property?.name}</TableCell>
                   <TableCell>{payment.property?.unit_number}</TableCell>
                   <TableCell>
-                    {new Date(payment.date).toLocaleDateString('es-MX', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
+                    {new Date(payment.date).toLocaleDateString("es-MX", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
                     })}
                   </TableCell>
                   <TableCell>
-                    {payment.method === 'transfer' ? 'Transferencia' :
-                     payment.method === 'debit' ? 'Débito' :
-                     payment.method === 'credit' ? 'Crédito' :
-                     payment.method === 'convenience' ? 'Tienda' : 'Suscripción'}
+                    {payment.method === "transfer"
+                      ? "Transferencia"
+                      : payment.method === "debit"
+                        ? "Débito"
+                        : payment.method === "credit"
+                          ? "Crédito"
+                          : payment.method === "convenience"
+                            ? "Tienda"
+                            : "Suscripción"}
                   </TableCell>
                   <TableCell>
-                    ${payment.amount.toLocaleString('es-MX')}
+                    ${payment.amount.toLocaleString("es-MX")}
                   </TableCell>
                   <TableCell className={getStatusColor(payment.status)}>
-                    {payment.status === 'completed' ? 'Completado' :
-                     payment.status === 'pending' ? 'Pendiente' : 'Fallido'}
+                    {payment.status === "completed"
+                      ? "Completado"
+                      : payment.status === "pending"
+                        ? "Pendiente"
+                        : "Fallido"}
                   </TableCell>
                 </TableRow>
               ))}
