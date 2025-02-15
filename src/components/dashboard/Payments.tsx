@@ -65,16 +65,13 @@ export function Payments() {
           status,
           property:properties!inner (
             name,
-            unit_number,
             building:buildings!inner (
               name
             )
           ),
           tenant:tenants!inner (
-            profile:profiles!inner (
-              first_name,
-              last_name
-            )
+            first_name,
+            last_name
           )
         `,
         )
@@ -136,7 +133,7 @@ export function Payments() {
   const filteredPayments = payments.filter((payment) => {
     const searchLower = searchTerm.toLowerCase();
     const tenantName =
-      `${payment.tenants.profile.first_name} ${payment.tenants.profile.last_name}`.toLowerCase();
+      `${payment.tenant.first_name} ${payment.tenant.last_name}`.toLowerCase();
     return (
       tenantName.includes(searchLower) ||
       payment.property.name.toLowerCase().includes(searchLower)
