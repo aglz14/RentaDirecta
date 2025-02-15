@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
@@ -35,6 +35,7 @@ interface Property {
 
 interface Tenant {
   id: string;
+  property_id: string;
   payment_scheme: 'subscription' | 'flex';
   last_payment_date: string | null;
   profile: {
@@ -42,7 +43,7 @@ interface Tenant {
     last_name: string;
     email: string;
     whatsapp: string;
-  };
+  } | null;
 }
 
 export default function PropertyUnit() {
@@ -55,6 +56,9 @@ export default function PropertyUnit() {
   useEffect(() => {
     const fetchPropertyData = async () => {
       try {
+        setIsLoading(true);
+
+        // Fetch property data
         const { data: propertyData, error: propertyError } = await supabase
           .from('properties')
           .select(`
@@ -69,11 +73,12 @@ export default function PropertyUnit() {
         if (propertyError) throw propertyError;
         setProperty(propertyData);
 
-        // Fetch tenants data
+        // Fetch tenants data for this property
         const { data: tenantsData, error: tenantsError } = await supabase
           .from('tenants')
           .select(`
             id,
+            property_id,
             payment_scheme,
             last_payment_date,
             profile:profiles!tenants_profile_id_fkey (
@@ -83,7 +88,8 @@ export default function PropertyUnit() {
               whatsapp
             )
           `)
-          .eq('property_id', id);
+          .eq('property_id', id)
+          .order('created_at', { ascending: false });
 
         if (tenantsError) throw tenantsError;
         setTenants(tenantsData || []);
@@ -99,7 +105,9 @@ export default function PropertyUnit() {
       }
     };
 
-    fetchPropertyData();
+    if (id) {
+      fetchPropertyData();
+    }
   }, [id, toast]);
 
   if (!property && !isLoading) {
