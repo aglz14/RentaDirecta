@@ -7,6 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
 import { AddBuildingDialog } from './AddBuildingDialog';
+import { useNavigate } from 'react-router-dom';
 
 interface Building {
   id: string;
@@ -28,6 +29,7 @@ export function Buildings() {
   const [isAddBuildingOpen, setIsAddBuildingOpen] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const fetchBuildings = async () => {
     try {
@@ -137,6 +139,7 @@ export function Buildings() {
                 <Button 
                   variant="outline" 
                   className="w-full mt-4 border-[#1B2956] text-[#1B2956] hover:bg-[#1B2956] hover:text-white"
+                  onClick={() => navigate(`/buildings/${building.id}`)}
                 >
                   Ver Detalles
                 </Button>

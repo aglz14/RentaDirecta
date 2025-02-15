@@ -9,6 +9,7 @@ import { DashboardContent } from '@/components/dashboard/DashboardContent';
 import TermsAndConditions from './pages/TermsAndConditions';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import CookiesPolicy from './pages/CookiesPolicy';
+import BuildingDetails from './pages/BuildingDetails';
 import { useAuth } from '@/contexts/AuthContext';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -49,6 +50,14 @@ export function AppRoutes() {
         element={
           <ProtectedRoute>
             <Administracion />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/administracion/inmueble/:id"
+        element={
+          <ProtectedRoute>
+            <BuildingDetails />
           </ProtectedRoute>
         }
       />
