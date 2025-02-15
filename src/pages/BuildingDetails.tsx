@@ -1,41 +1,48 @@
-
-import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Building2, MapPin, Calendar } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
+import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
+import { BuildingHeader } from '@/components/buildings/BuildingHeader';
+import { BuildingInfo } from '@/components/buildings/BuildingInfo';
+import { BuildingUsers } from '@/components/buildings/BuildingUsers';
+import { BuildingMap } from '@/components/buildings/BuildingMap';
+import { BuildingDistribution } from '@/components/buildings/BuildingDistribution';
+import { BuildingUnits } from '@/components/buildings/BuildingUnits';
+import { BuildingDocuments } from '@/components/buildings/BuildingDocuments';
+import { BuildingExpenses } from '@/components/buildings/BuildingExpenses';
+import { BuildingPerformance } from '@/components/buildings/BuildingPerformance';
+import { Building } from '@/types/buildings';
 
-interface Building {
-  id: string;
-  name: string;
-  address: string;
-  property_type: {
-    name: string;
-  };
-  active: boolean;
-  monthly_rent: number;
-  building?: {
-    name: string;
-    address: string;
-  };
-}
+// Dummy documents data
+const documents = [
+  {
+    id: '1',
+    name: 'Contrato de Arrendamiento.pdf',
+    type: 'PDF',
+    uploadDate: '2025-01-15',
+    expirationDate: '2026-01-15',
+    size: '2.5 MB'
+  },
+  {
+    id: '2',
+    name: 'Escrituras.pdf',
+    type: 'PDF',
+    uploadDate: '2025-01-10',
+    expirationDate: null,
+    size: '5.8 MB'
+  }
+];
 
 export default function BuildingDetails() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const [building, setBuilding] = useState<Building | null>(null);
 
   useEffect(() => {
     const fetchBuilding = async () => {
       const { data, error } = await supabase
         .from('buildings')
-        .select(`
-          *,
-          property_type (
-            name
-          )
-        `)
+        .select('*')
         .eq('id', id)
         .single();
 
@@ -50,72 +57,27 @@ export default function BuildingDetails() {
     fetchBuilding();
   }, [id]);
 
-  const formatCurrency = (amount: number | null | undefined) => {
-    if (amount == null) return '$0';
-    return new Intl.NumberFormat('es-MX', {
-      style: 'currency',
-      currency: 'MXN'
-    }).format(amount);
-  };
-
   if (!building) return null;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="space-y-6 bg-white rounded-lg shadow-lg p-6">
-        <div className="flex items-center gap-4">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => navigate('/administracion')}
-            className="h-8 w-8"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <h2 className="text-2xl font-bold text-gray-900">Detalles del Inmueble</h2>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-8">
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <Header />
+      <main className="flex-1 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="space-y-6">
-            <div>
-              <h3 className="text-xl font-semibold text-gray-900">{building.name}</h3>
-              <p className="flex items-center text-gray-600 mt-1">
-                <MapPin className="h-4 w-4 mr-1" />
-                {building.address}
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Building2 className="h-4 w-4 text-[#4CAF50]" />
-                  <span className="text-gray-700">
-                    {building.property_type?.name || 'Tipo no especificado'}
-                  </span>
-                </div>
-                <Badge variant="outline" className={building.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>
-                  {building.active ? 'Activo' : 'Inactivo'}
-                </Badge>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-[#4CAF50]" />
-                <span className="text-gray-700">
-                  {formatCurrency(building.monthly_rent)}/mes
-                </span>
-              </div>
-            </div>
+            <BuildingHeader />
+            <BuildingInfo building={building} />
+            <BuildingUsers />
+            <BuildingMap building={building} />
+            <BuildingDistribution />
+            <BuildingUnits />
+            <BuildingDocuments documents={documents} />
+            <BuildingExpenses />
+            <BuildingPerformance />
           </div>
-
-          {building.building && (
-            <div className="space-y-4">
-              <h3 className="font-semibold text-gray-900">Información del Edificio</h3>
-              <p className="text-gray-700">{building.building.name}</p>
-              <p className="text-gray-600">{building.building.address}</p>
-            </div>
-          )}
         </div>
-      </div>
+      </main>
+      <Footer />
     </div>
   );
 }

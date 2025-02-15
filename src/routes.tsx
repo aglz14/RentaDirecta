@@ -10,6 +10,7 @@ import TermsAndConditions from './pages/TermsAndConditions';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import CookiesPolicy from './pages/CookiesPolicy';
 import BuildingDetails from './pages/BuildingDetails';
+import PropertyUnit from './pages/PropertyUnit';
 import { useAuth } from '@/contexts/AuthContext';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -58,6 +59,14 @@ export function AppRoutes() {
         element={
           <ProtectedRoute>
             <BuildingDetails />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/administracion/propiedad/:id"
+        element={
+          <ProtectedRoute>
+            <PropertyUnit />
           </ProtectedRoute>
         }
       />

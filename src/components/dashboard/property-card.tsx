@@ -1,10 +1,24 @@
-import { useState } from 'react';
 import { Building2, Calendar, MapPin } from "lucide-react";
-import { Property } from "@/types";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+
+interface Property {
+  id: string;
+  name: string;
+  monthly_rent: number;
+  active: boolean;
+  property_type: {
+    name: string;
+  };
+  street: string;
+  unit_number: string;
+  neighborhood: string;
+  zip_code: string;
+  city: string;
+  state: string;
+  country: string;
+}
 
 interface PropertyCardProps {
   property: Property;
@@ -12,24 +26,31 @@ interface PropertyCardProps {
 
 export function PropertyCard({ property }: PropertyCardProps) {
   const navigate = useNavigate();
-  const formatCurrency = (amount: number | null | undefined): string => {
-    if (amount == null) return '$0.00';
-    return `$${amount.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  
+  const formatCurrency = (amount: number): string => {
+    return new Intl.NumberFormat('es-MX', {
+      style: 'currency',
+      currency: 'MXN'
+    }).format(amount);
+  };
+
+  const formatAddress = (property: Property): string => {
+    return `${property.street} ${property.unit_number}, ${property.neighborhood}, ${property.zip_code}, ${property.city}, ${property.state}, ${property.country}`;
   };
 
   return (
     <Card 
       className="hover:shadow-lg transition-shadow cursor-pointer" 
-      onClick={() => navigate(`/administracion/inmueble/${property.id}`)}
+      onClick={() => navigate(`/administracion/propiedad/${property.id}`)}
     >
       <CardHeader>
         <div className="flex justify-between items-start">
           <div>
             <CardTitle className="text-xl font-bold text-gray-900">{property.name}</CardTitle>
-            <CardDescription className="flex items-center text-gray-600 mt-1">
+            <div className="flex items-center text-gray-600 mt-1">
               <MapPin className="h-4 w-4 mr-1" />
-              {property.address}
-            </CardDescription>
+              <span className="text-sm">{formatAddress(property)}</span>
+            </div>
           </div>
           <Badge variant="outline" className={property.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>
             {property.active ? 'Activo' : 'Inactivo'}

@@ -9,7 +9,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Building2, Home, Users, Receipt } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Buildings } from '@/components/dashboard/Buildings';
-import { AddPropertyDialog } from '@/components/dashboard/AddPropertyDialog';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/lib/supabase';
@@ -17,7 +16,6 @@ import { supabase } from '@/lib/supabase';
 interface Property {
   id: string;
   name: string;
-  address: string;
   monthly_rent: number;
   active: boolean;
   property_type: {
@@ -25,6 +23,13 @@ interface Property {
   };
   property_type_id: string;
   building_id?: string;
+  street: string;
+  unit_number: string;
+  neighborhood: string;
+  zip_code: string;
+  city: string;
+  state: string;
+  country: string;
 }
 
 export default function Administracion() {
@@ -32,7 +37,6 @@ export default function Administracion() {
   const [properties, setProperties] = useState<Property[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [isAddPropertyOpen, setIsAddPropertyOpen] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
 
@@ -52,14 +56,20 @@ export default function Administracion() {
         .select(`
           id,
           name,
-          address,
           monthly_rent,
           active,
           property_type:property_type_id (
             name
           ),
           property_type_id,
-          building_id
+          building_id,
+          street,
+          unit_number,
+          neighborhood,
+          zip_code,
+          city,
+          state,
+          country
         `)
         .eq('owner_id', user.id)
         .order('created_at', { ascending: false });
@@ -85,12 +95,11 @@ export default function Administracion() {
     }
   }, [activeTab, user]);
 
-
   const filteredProperties = properties.filter(property => {
     const searchLower = searchTerm.toLowerCase();
     return (
       property.name.toLowerCase().includes(searchLower) ||
-      property.address.toLowerCase().includes(searchLower) ||
+      property.street.toLowerCase().includes(searchLower) ||
       property.property_type?.name.toLowerCase().includes(searchLower)
     );
   });
@@ -123,7 +132,11 @@ export default function Administracion() {
               <Buildings />
             </TabsContent>
             <TabsContent value="units">
-              <Units properties={filteredProperties} isLoading={isLoading} setSearchTerm={setSearchTerm}/>
+              <Units 
+                properties={filteredProperties} 
+                isLoading={isLoading} 
+                setSearchTerm={setSearchTerm}
+              />
             </TabsContent>
             <TabsContent value="tenants">
               <Tenants />

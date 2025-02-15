@@ -12,14 +12,14 @@ import { useNavigate } from 'react-router-dom';
 interface Building {
   id: string;
   name: string;
-  address: string;
+  street: string;
+  exterior_number: string;
+  interior_number: string | null;
+  neighborhood: string;
+  zip_code: string;
   city: string;
   state: string;
   country: string;
-  total_units: number;
-  occupied_units: number;
-  total_area: number;
-  occupied_area: number;
 }
 
 export function Buildings() {
@@ -53,22 +53,12 @@ export function Buildings() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-
-      const processedBuildings = data.map(building => ({
-        ...building,
-        total_units: building.properties?.length || 0,
-        occupied_units: building.properties?.filter(p => p.tenants?.length > 0).length || 0,
-        total_area: building.properties?.reduce((sum, p) => sum + (p.area || 0), 0) || 0,
-        occupied_area: building.properties?.filter(p => p.tenants?.length > 0)
-          .reduce((sum, p) => sum + (p.area || 0), 0) || 0,
-      }));
-
-      setBuildings(processedBuildings);
+      setBuildings(data || []);
     } catch (error) {
       console.error('Error fetching buildings:', error);
       toast({
         title: 'Error',
-        description: 'No se pudieron cargar los edificios. Por favor, intenta de nuevo.',
+        description: 'No se pudieron cargar los inmuebles. Por favor, intenta de nuevo.',
         variant: 'destructive',
       });
     } finally {
@@ -84,7 +74,7 @@ export function Buildings() {
     const searchLower = searchTerm.toLowerCase();
     return (
       building.name.toLowerCase().includes(searchLower) ||
-      building.address.toLowerCase().includes(searchLower) ||
+      building.street.toLowerCase().includes(searchLower) ||
       building.city.toLowerCase().includes(searchLower)
     );
   });
@@ -96,7 +86,7 @@ export function Buildings() {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
           <Input
             type="text"
-            placeholder="Buscar edificios..."
+            placeholder="Buscar inmuebles..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10 bg-white border-gray-200 w-full"
@@ -113,7 +103,11 @@ export function Buildings() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredBuildings.map((building) => (
-          <Card key={building.id} className="hover:shadow-lg transition-shadow">
+          <Card 
+            key={building.id} 
+            className="hover:shadow-lg transition-shadow cursor-pointer"
+            onClick={() => navigate(`/administracion/inmueble/${building.id}`)}
+          >
             <CardHeader className="pb-4">
               <div className="flex justify-between items-start">
                 <div>
@@ -136,13 +130,6 @@ export function Buildings() {
                   <p className="text-sm text-gray-600">{building.city}, {building.state}</p>
                   <p className="text-sm text-gray-600">{building.country}</p>
                 </div>
-                <Button 
-                  variant="outline" 
-                  className="w-full mt-4 border-[#1B2956] text-[#1B2956] hover:bg-[#1B2956] hover:text-white"
-                  onClick={() => navigate(`/buildings/${building.id}`)}
-                >
-                  Ver Detalles
-                </Button>
               </div>
             </CardContent>
           </Card>
