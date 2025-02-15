@@ -7,6 +7,8 @@ interface Tenant {
   property_id: string;
   payment_scheme: 'subscription' | 'flex';
   last_payment_date: string | null;
+  rent: number;
+  currency: string;
   profile: {
     first_name: string;
     last_name: string;
@@ -96,6 +98,10 @@ export function PropertyUnitTenants({ tenants }: PropertyUnitTenantsProps) {
                       <div>
                         <span className="text-sm text-gray-500">Último Pago:</span>
                         <p className="text-gray-900">{formatDate(tenant.last_payment_date)}</p>
+                      </div>
+                      <div>
+                        <span className="text-sm text-gray-500">Renta:</span>
+                        <p className="text-gray-900">{tenant.currency} ${tenant.rent?.toLocaleString('en-US', { minimumFractionDigits: 2 })}</p>
                       </div>
                     </div>
                   </div>
