@@ -114,9 +114,9 @@ export function AddBuildingDialog({
         setBuildingTypes(data);
       } catch (error) {
         console.error("Error fetching building types:", error);
-          toast({
-            title: "Error",
-            description: "No se pudieron cargar los tipos de inmuebles",
+        toast({
+          title: "Error",
+          description: "No se pudieron cargar los tipos de inmuebles",
             variant: "destructive",
           });
           return;
