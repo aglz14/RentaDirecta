@@ -81,7 +81,7 @@ export function AddBuildingDialog({
 }: AddBuildingDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [buildingTypes, setBuildingTypes] = useState<
-    Array<{ id: number; name: string; value: string }>
+    Array<{ id: string; name: string; value: string }>
   >([]);
   const { user } = useAuth();
   const { toast } = useToast();
@@ -237,7 +237,7 @@ export function AddBuildingDialog({
                     buildingTypes.map((type) => (
                       <SelectItem 
                         key={type.id} 
-                        value={type.name}
+                        value={type.id}
                         className="text-gray-900 hover:bg-gray-100 cursor-pointer py-2 px-3"
                       >
                         {type.name}
