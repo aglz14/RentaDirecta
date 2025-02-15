@@ -34,7 +34,7 @@ export function Buildings() {
       if (!user) return;
 
       const { data, error } = await supabase
-        .from('building')
+        .from('buildings')
         .select(`
           id,
           name,
