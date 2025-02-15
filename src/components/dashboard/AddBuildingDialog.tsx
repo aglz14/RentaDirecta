@@ -91,7 +91,7 @@ export function AddBuildingDialog({
       try {
         const { data, error } = await supabase
           .from('building_types')
-          .select('id, name')
+          .select('*')
           .order('name');
 
         if (error) {
@@ -130,6 +130,7 @@ export function AddBuildingDialog({
     handleSubmit,
     formState: { errors },
     setValue,
+    reset,
   } = useForm<BuildingFormData>({
     resolver: zodResolver(buildingSchema),
   });
