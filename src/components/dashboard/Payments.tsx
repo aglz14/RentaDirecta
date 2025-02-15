@@ -53,9 +53,11 @@ export function Payments() {
             name,
             unit_number
           ),
-          tenant:profiles!inner (
-            first_name,
-            last_name
+          tenant:tenants!inner (
+            profile:profiles!inner (
+              first_name,
+              last_name
+            )
           )
         `)
         .order('date', { ascending: false });
@@ -216,7 +218,7 @@ export function Payments() {
               {filteredPayments.map((payment) => (
                 <TableRow key={payment.id} className="hover:bg-gray-50">
                   <TableCell className="font-medium">
-                    {payment.tenant?.first_name} {payment.tenant?.last_name}
+                    {payment.tenant?.profile?.first_name} {payment.tenant?.profile?.last_name}
                   </TableCell>
                   <TableCell>{payment.property?.name}</TableCell>
                   <TableCell>{payment.property?.unit_number}</TableCell>
