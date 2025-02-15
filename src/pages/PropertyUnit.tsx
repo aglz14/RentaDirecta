@@ -81,11 +81,15 @@ export default function PropertyUnit() {
             property_id,
             payment_scheme,
             last_payment_date,
+            created_at,
+            status,
             profile:profiles!tenants_profile_id_fkey (
               first_name,
               last_name,
               email,
-              whatsapp
+              whatsapp,
+              identification,
+              phone
             )
           `)
           .eq('property_id', id)
