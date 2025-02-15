@@ -90,8 +90,6 @@ export default function PropertyUnit() {
             payment_scheme,
             last_payment_date,
             created_at,
-            monthly_rent,
-            currency,
             profile:profiles!tenants_profile_id_fkey (
               first_name,
               last_name,
