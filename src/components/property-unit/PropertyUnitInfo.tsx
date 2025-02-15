@@ -1,5 +1,7 @@
-import { Building2, MapPin, Mail, DollarSign, FileText } from 'lucide-react';
+
+import { Building2, DollarSign, Mail } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 interface Property {
   name: string;
@@ -15,10 +17,14 @@ interface Property {
   city: string;
   state: string;
   country: string;
-  owner_name: string;
-  owner_email: string;
+  active: boolean;
+  owner_id: string;
+  owner: {
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
   predial?: string | null;
-  status: string; // Added property status
 }
 
 interface PropertyUnitInfoProps {
@@ -42,7 +48,7 @@ export function PropertyUnitInfo({ property }: PropertyUnitInfoProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{property.name} </CardTitle> {/*Removed Status from here*/}
+        <CardTitle>Información de la Propiedad</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid grid-cols-2 gap-6">
@@ -55,12 +61,9 @@ export function PropertyUnitInfo({ property }: PropertyUnitInfoProps) {
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <MapPin className="h-5 w-5 text-[#4CAF50]" />
-              <div>
-                <p className="text-sm text-gray-500">Dirección</p>
-                <p className="font-medium">{formatAddress()}</p>
-              </div>
+            <div>
+              <p className="text-sm text-gray-500">Dirección</p>
+              <p className="font-medium">{formatAddress()}</p>
             </div>
 
             <div className="flex items-center gap-2">
@@ -72,35 +75,35 @@ export function PropertyUnitInfo({ property }: PropertyUnitInfoProps) {
             </div>
 
             {property.predial && (
-              <div className="flex items-center gap-2">
-                <FileText className="h-5 w-5 text-[#4CAF50]" />
-                <div>
-                  <p className="text-sm text-gray-500">Cuenta Predial</p>
-                  <p className="font-medium">{property.predial}</p>
-                </div>
+              <div>
+                <p className="text-sm text-gray-500">Cuenta Predial</p>
+                <p className="font-medium">{property.predial}</p>
               </div>
             )}
-            <div className="flex items-center gap-2">
-                <p className="text-sm text-gray-500">Estado de la propiedad</p>
-                <p className="font-medium">{property.status}</p> {/*Added property status here*/}
+
+            <div>
+              <p className="text-sm text-gray-500">Estado de la propiedad</p>
+              <Badge variant={property.active ? 'success' : 'secondary'}>
+                {property.active ? 'Activo' : 'Inactivo'}
+              </Badge>
             </div>
           </div>
 
           <div className="space-y-4">
             <div>
               <p className="text-sm text-gray-500">Propietario</p>
-              <p className="font-medium">{property.owner_name}</p> {/* Assuming owner_name is available.  Adjust as needed. */}
+              <p className="font-medium">{`${property.owner.first_name} ${property.owner.last_name}`}</p>
             </div>
 
             <div className="flex items-center gap-2">
               <Mail className="h-5 w-5 text-[#4CAF50]" />
               <div>
                 <p className="text-sm text-gray-500">Email del Propietario</p>
-                <a
-                  href={`mailto:${property.owner_email}`}
+                <a 
+                  href={`mailto:${property.owner.email}`}
                   className="font-medium text-blue-600 hover:text-blue-800"
                 >
-                  {property.owner_email}
+                  {property.owner.email}
                 </a>
               </div>
             </div>
