@@ -228,7 +228,7 @@ export function AddBuildingDialog({
                 onValueChange={(value) => setValue("building_type", value)}
               >
                 <SelectTrigger className="bg-white text-gray-900 border-gray-300">
-                  <SelectValue placeholder="Selecciona el tipo" />
+                  <SelectValue placeholder="Selecciona el tipo de inmueble" />
                 </SelectTrigger>
                 <SelectContent>
                   {buildingTypes.map((type) => (
