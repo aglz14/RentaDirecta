@@ -91,7 +91,7 @@ export function AddBuildingDialog({
       try {
         const { data, error } = await supabase
           .from('building_types')
-          .select('id, name, value')
+          .select('id, name')
           .order('name');
 
         if (error) {
@@ -235,7 +235,7 @@ export function AddBuildingDialog({
                     buildingTypes.map((type) => (
                       <SelectItem 
                         key={type.id} 
-                        value={type.value}
+                        value={type.name}
                         className="text-gray-900 hover:bg-gray-100 cursor-pointer py-2 px-3"
                       >
                         {type.name}
