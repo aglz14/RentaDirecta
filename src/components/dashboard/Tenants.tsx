@@ -53,10 +53,11 @@ export function Tenants() {
               whatsapp
             ),
             property:properties!tenants_property_id_fkey (
-              name
-            ),
-            unit:units!tenants_unit_id_fkey (
-              unit_number
+              id,
+              unit_number,
+              building:buildings!inner (
+                name
+              )
             )
           `)
           .eq('property.owner_id', user.id);
@@ -138,8 +139,8 @@ export function Tenants() {
                   <TableCell className="font-medium text-gray-900">
                     {tenant.profile.first_name} {tenant.profile.last_name}
                   </TableCell>
-                  <TableCell className="text-gray-900">{tenant.property.name}</TableCell>
-                  <TableCell className="text-gray-900">{tenant.unit?.unit_number}</TableCell>
+                  <TableCell className="text-gray-900">{tenant.property.building?.name}</TableCell>
+                  <TableCell className="text-gray-900">{tenant.property.unit_number}</TableCell>
                   <TableCell className="text-gray-900">{tenant.profile.email}</TableCell>
                   <TableCell className="text-gray-900">{tenant.profile.whatsapp}</TableCell>
                   <TableCell className="text-gray-900">
