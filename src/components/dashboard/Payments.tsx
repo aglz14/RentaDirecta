@@ -10,23 +10,21 @@ import { supabase } from '@/lib/supabase';
 
 interface Payment {
   id: string;
+  tenant_id: string;
+  property_id: string;
   amount: number;
   date: string;
+  method: 'transfer' | 'debit' | 'credit' | 'convenience' | 'subscription';
   status: 'pending' | 'completed' | 'failed';
-  payment_method: string;
-  tenants: {
-    profile: {
-      first_name: string;
-      last_name: string;
-    };
-  };
   property: {
     name: string;
-    monthly_rent: number;
+    unit: {
+      unit_number: string;
+    };
   };
-  unit: {
-    name: string;
-    unit_number: string;
+  tenant: {
+    first_name: string;
+    last_name: string;
   };
 }
 
@@ -45,18 +43,21 @@ export function Payments() {
         .from('payments')
         .select(`
           id,
+          tenant_id,
+          property_id,
           amount,
           date,
+          method,
           status,
-          tenants!inner (
-            profile:profiles!inner (
-              first_name,
-              last_name
+          property:properties (
+            name,
+            unit:units (
+              unit_number
             )
           ),
-          property:properties!inner (
-            name,
-            monthly_rent
+          tenant:profiles (
+            first_name,
+            last_name
           )
         `)
         .order('date', { ascending: false });
@@ -217,10 +218,10 @@ export function Payments() {
               {filteredPayments.map((payment) => (
                 <TableRow key={payment.id} className="hover:bg-gray-50">
                   <TableCell className="font-medium">
-                    {payment.tenants.profile.first_name} {payment.tenants.profile.last_name}
+                    {payment.tenant?.first_name} {payment.tenant?.last_name}
                   </TableCell>
-                  <TableCell>{payment.property.name}</TableCell>
-                  <TableCell>{payment.unit.unit_number}</TableCell>
+                  <TableCell>{payment.property?.name}</TableCell>
+                  <TableCell>{payment.property?.unit?.unit_number}</TableCell>
                   <TableCell>
                     {new Date(payment.date).toLocaleDateString('es-MX', {
                       year: 'numeric',
@@ -228,7 +229,12 @@ export function Payments() {
                       day: 'numeric'
                     })}
                   </TableCell>
-                  <TableCell>{payment.payment_method}</TableCell>
+                  <TableCell>
+                    {payment.method === 'transfer' ? 'Transferencia' :
+                     payment.method === 'debit' ? 'Débito' :
+                     payment.method === 'credit' ? 'Crédito' :
+                     payment.method === 'convenience' ? 'Tienda' : 'Suscripción'}
+                  </TableCell>
                   <TableCell>
                     ${payment.amount.toLocaleString('es-MX')}
                   </TableCell>
