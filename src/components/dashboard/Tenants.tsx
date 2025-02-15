@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
@@ -14,14 +13,17 @@ interface Tenant {
     last_name: string;
     email: string;
     whatsapp: string | null;
-    user_type: string;
   };
   property: {
     name: string;
   };
+  unit: {
+    unit_number: string;
+  };
   payment_scheme: 'subscription' | 'flex';
   last_payment_date: string | null;
-  status: 'Al día' | 'Pendiente' | 'Atrasado';
+  rent: number;
+  currency: string;
 }
 
 export function Tenants() {
@@ -42,7 +44,8 @@ export function Tenants() {
             id,
             payment_scheme,
             last_payment_date,
-            created_at,
+            rent,
+            currency,
             profile:profiles!tenants_profile_id_fkey (
               first_name,
               last_name,
@@ -51,39 +54,15 @@ export function Tenants() {
             ),
             property:properties!tenants_property_id_fkey (
               name
+            ),
+            unit:units!tenants_unit_id_fkey (
+              unit_number
             )
           `)
           .eq('property.owner_id', user.id);
 
         if (error) throw error;
-
-        const transformedTenants = data.map((tenant): Tenant => {
-          let status: Tenant['status'] = 'Al día';
-          if (tenant.last_payment_date) {
-            const lastPayment = new Date(tenant.last_payment_date);
-            const now = new Date();
-            const daysDiff = Math.floor((now.getTime() - lastPayment.getTime()) / (1000 * 60 * 60 * 24));
-            
-            if (daysDiff > 30) {
-              status = 'Atrasado';
-            } else if (daysDiff > 25) {
-              status = 'Pendiente';
-            }
-          } else {
-            status = 'Pendiente';
-          }
-
-          return {
-            id: tenant.id,
-            profile: tenant.profile,
-            property: tenant.property,
-            payment_scheme: tenant.payment_scheme,
-            last_payment_date: tenant.last_payment_date,
-            status,
-          };
-        });
-
-        setTenants(transformedTenants);
+        setTenants(data);
       } catch (error) {
         console.error('Error fetching tenants:', error);
         toast({
@@ -106,19 +85,6 @@ export function Tenants() {
            tenant.property.name.toLowerCase().includes(searchTermLower) ||
            tenant.profile.email.toLowerCase().includes(searchTermLower);
   });
-
-  const getStatusColor = (status: Tenant['status']) => {
-    switch (status) {
-      case 'Al día':
-        return 'text-green-600 font-medium';
-      case 'Pendiente':
-        return 'text-yellow-600 font-medium';
-      case 'Atrasado':
-        return 'text-red-600 font-medium';
-      default:
-        return 'text-gray-900 font-medium';
-    }
-  };
 
   if (isLoading) {
     return (
@@ -149,18 +115,20 @@ export function Tenants() {
           <TableHeader>
             <TableRow>
               <TableHead className="text-gray-900 font-semibold">Nombre</TableHead>
-              <TableHead className="text-gray-900 font-semibold">Propiedad</TableHead>
+              <TableHead className="text-gray-900 font-semibold">Inmueble</TableHead>
+              <TableHead className="text-gray-900 font-semibold">Unidad</TableHead>
               <TableHead className="text-gray-900 font-semibold">Email</TableHead>
               <TableHead className="text-gray-900 font-semibold">WhatsApp</TableHead>
               <TableHead className="text-gray-900 font-semibold">Plan de Pago</TableHead>
               <TableHead className="text-gray-900 font-semibold">Último Pago</TableHead>
-              <TableHead className="text-gray-900 font-semibold">Estado</TableHead>
+              <TableHead className="text-gray-900 font-semibold">Renta</TableHead>
+              <TableHead className="text-gray-900 font-semibold">Moneda</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredTenants.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-8 text-gray-500">
+                <TableCell colSpan={9} className="text-center py-8 text-gray-500">
                   No se encontraron inquilinos
                 </TableCell>
               </TableRow>
@@ -171,6 +139,7 @@ export function Tenants() {
                     {tenant.profile.first_name} {tenant.profile.last_name}
                   </TableCell>
                   <TableCell className="text-gray-900">{tenant.property.name}</TableCell>
+                  <TableCell className="text-gray-900">{tenant.unit?.unit_number}</TableCell>
                   <TableCell className="text-gray-900">{tenant.profile.email}</TableCell>
                   <TableCell className="text-gray-900">{tenant.profile.whatsapp}</TableCell>
                   <TableCell className="text-gray-900">
@@ -185,9 +154,10 @@ export function Tenants() {
                         })
                       : 'Sin pagos'}
                   </TableCell>
-                  <TableCell className={getStatusColor(tenant.status)}>
-                    {tenant.status}
+                  <TableCell className="text-gray-900">
+                    ${tenant.rent?.toLocaleString('en-US', { minimumFractionDigits: 2 })}
                   </TableCell>
+                  <TableCell className="text-gray-900">{tenant.currency}</TableCell>
                 </TableRow>
               ))
             )}
