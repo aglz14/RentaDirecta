@@ -1,4 +1,3 @@
-
 -- Add is_admin column to auth.users if it doesn't exist
 DO $$ 
 BEGIN
@@ -37,3 +36,9 @@ DROP POLICY IF EXISTS "Only admin users can delete building types" ON public.bui
 CREATE POLICY "Only admin users can delete building types" ON public.building_types
   FOR DELETE TO authenticated
   USING (public.is_admin());
+
+-- Create policy for reading building types (allow all users to read)
+DROP POLICY IF EXISTS "Authenticated users can view building types" ON public.building_types;
+CREATE POLICY "Allow read access to building_types" ON public.building_types
+  FOR SELECT TO authenticated
+  USING (true);

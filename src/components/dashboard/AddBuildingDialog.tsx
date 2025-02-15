@@ -90,9 +90,11 @@ export function AddBuildingDialog({
     const fetchBuildingTypes = async () => {
       try {
         const { data, error } = await supabase
-          .from("building_types")
-          .select("id, name, value")
-          .order("name");
+          .from('building_types')
+          .select('*')
+          .order('name');
+
+        console.log('Building types response:', { data, error });
 
         if (error) {
           console.error("Supabase error:", error);
