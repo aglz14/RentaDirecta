@@ -18,6 +18,7 @@ interface Property {
   owner_name: string;
   owner_email: string;
   predial?: string | null;
+  status: string; // Added property status
 }
 
 interface PropertyUnitInfoProps {
@@ -41,7 +42,7 @@ export function PropertyUnitInfo({ property }: PropertyUnitInfoProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Información de la Propiedad</CardTitle>
+        <CardTitle>{property.name} </CardTitle> {/*Removed Status from here*/}
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid grid-cols-2 gap-6">
@@ -65,7 +66,7 @@ export function PropertyUnitInfo({ property }: PropertyUnitInfoProps) {
             <div className="flex items-center gap-2">
               <DollarSign className="h-5 w-5 text-[#4CAF50]" />
               <div>
-                <p className="text-sm text-gray-500">Renta Mensual</p>
+                <p className="text-sm text-gray-500">Renta Mensual ({property.currency})</p>
                 <p className="font-medium">{formatCurrency(property.monthly_rent, property.currency)}</p>
               </div>
             </div>
@@ -79,23 +80,27 @@ export function PropertyUnitInfo({ property }: PropertyUnitInfoProps) {
                 </div>
               </div>
             )}
+            <div className="flex items-center gap-2">
+                <p className="text-sm text-gray-500">Estado de la propiedad</p>
+                <p className="font-medium">{property.status}</p> {/*Added property status here*/}
+            </div>
           </div>
 
           <div className="space-y-4">
             <div>
               <p className="text-sm text-gray-500">Propietario</p>
-              <p className="font-medium">{`${property.owner.first_name} ${property.owner.last_name}`}</p>
+              <p className="font-medium">{property.owner_name}</p> {/* Assuming owner_name is available.  Adjust as needed. */}
             </div>
 
             <div className="flex items-center gap-2">
               <Mail className="h-5 w-5 text-[#4CAF50]" />
               <div>
                 <p className="text-sm text-gray-500">Email del Propietario</p>
-                <a 
-                  href={`mailto:${property.owner.email}`}
+                <a
+                  href={`mailto:${property.owner_email}`}
                   className="font-medium text-blue-600 hover:text-blue-800"
                 >
-                  {property.owner.email}
+                  {property.owner_email}
                 </a>
               </div>
             </div>

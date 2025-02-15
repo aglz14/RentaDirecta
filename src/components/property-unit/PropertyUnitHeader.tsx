@@ -29,9 +29,6 @@ export function PropertyUnitHeader({ property }: PropertyUnitHeaderProps) {
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <h2 className="text-2xl font-bold text-gray-900">{property.name}</h2>
-        <Badge variant={property.active ? 'success' : 'secondary'}>
-          {property.active ? 'Activo' : 'Inactivo'}
-        </Badge>
       </div>
     </div>
   );
