@@ -91,13 +91,29 @@ export function AddBuildingDialog({
       try {
         const { data, error } = await supabase
           .from('building_types')
-          .select('*')
+          .select('id, name, value')
           .order('name');
 
-        console.log('Building types response:', { data, error });
-
         if (error) {
-          console.error("Supabase error:", error);
+          console.error("Error fetching building types:", error);
+          toast({
+            title: "Error",
+            description: "No se pudieron cargar los tipos de inmueble",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        if (!data || data.length === 0) {
+          console.warn("No building types found");
+          setBuildingTypes([]);
+          return;
+        }
+
+        console.log('Building types loaded:', data);
+        setBuildingTypes(data);
+      } catch (error) {
+        console.error("Error fetching building types:", error);
           toast({
             title: "Error",
             description: "No se pudieron cargar los tipos de inmuebles",
@@ -227,15 +243,23 @@ export function AddBuildingDialog({
               <Select
                 onValueChange={(value) => setValue("building_type", value)}
               >
-                <SelectTrigger className="bg-white text-gray-900 border-gray-300">
-                  <SelectValue placeholder="Selecciona el tipo de inmueble" />
+                <SelectTrigger className="bg-white text-gray-900 border-gray-300 h-10 px-3 py-2">
+                  <SelectValue placeholder="Selecciona el tipo de inmueble" className="text-gray-500" />
                 </SelectTrigger>
-                <SelectContent>
-                  {buildingTypes.map((type) => (
-                    <SelectItem key={type.id} value={type.value}>
-                      {type.name}
-                    </SelectItem>
-                  ))}
+                <SelectContent className="bg-white border border-gray-200 shadow-lg">
+                  {buildingTypes && buildingTypes.length > 0 ? (
+                    buildingTypes.map((type) => (
+                      <SelectItem 
+                        key={type.id} 
+                        value={type.value}
+                        className="text-gray-900 hover:bg-gray-100 cursor-pointer py-2 px-3"
+                      >
+                        {type.name}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <div className="text-gray-500 py-2 px-3">No hay tipos disponibles</div>
+                  )}
                 </SelectContent>
               </Select>
               {errors.building_type && (
