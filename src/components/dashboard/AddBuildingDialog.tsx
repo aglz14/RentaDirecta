@@ -116,23 +116,7 @@ export function AddBuildingDialog({
         console.error("Error fetching building types:", error);
         toast({
           title: "Error",
-          description: "No se pudieron cargar los tipos de inmuebles",
-            variant: "destructive",
-          });
-          return;
-        }
-
-        if (!data || data.length === 0) {
-          console.warn("No building types found");
-          return;
-        }
-
-        setBuildingTypes(data);
-      } catch (error) {
-        console.error("Error fetching building types:", error);
-        toast({
-          title: "Error",
-          description: "No se pudieron cargar los tipos de inmuebles.",
+          description: "No se pudieron cargar los tipos de inmueble",
           variant: "destructive",
         });
       }
