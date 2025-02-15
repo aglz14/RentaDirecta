@@ -28,7 +28,8 @@ interface PropertyDetails extends Property {
   } | null;
 }
 
-export function PropertyCard({ property, onSelect }: { property: Property; onSelect: (property: Property) => void }) {
+export function PropertyCard({ property }: { property: Property }) {
+  const navigate = useNavigate();
   const formatCurrency = (amount: number | null | undefined): string => {
     if (amount == null) return '$0.00';
     return `$${amount.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -37,7 +38,7 @@ export function PropertyCard({ property, onSelect }: { property: Property; onSel
   return (
     <Card 
       className="hover:shadow-lg transition-shadow cursor-pointer" 
-      onClick={() => onSelect(property)}
+      onClick={() => navigate(`/administracion/inmueble/${property.id}`)}
     >
       <CardHeader>
         <div className="flex justify-between items-start">
