@@ -79,7 +79,7 @@ export function BuildingUnits() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => navigate(`/unidad/${unit.id}`)}
+                    onClick={() => navigate(`/administracion/propiedad/${unit.id}`)}
                   >
                     <Eye className="h-4 w-4" />
                   </Button>
