@@ -8,6 +8,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -22,6 +29,9 @@ const buildingSchema = z.object({
   name: z.string()
     .min(3, 'El nombre debe tener al menos 3 caracteres')
     .max(100, 'El nombre no puede exceder 100 caracteres'),
+  building_type: z.string({
+    required_error: 'El tipo de inmueble es requerido',
+  }),
   street: z.string()
     .min(5, 'La calle debe tener al menos 5 caracteres')
     .max(200, 'La calle no puede exceder 200 caracteres'),
@@ -76,6 +86,7 @@ export function AddBuildingDialog({ isOpen, onClose, onSuccess }: AddBuildingDia
       const buildingData = {
         owner_id: user.id,
         name: data.name.trim(),
+        building_type: data.building_type,
         street: data.street.trim(),
         exterior_number: data.exterior_number.trim(),
         interior_number: data.interior_number?.trim() || null,
@@ -127,19 +138,42 @@ export function AddBuildingDialog({ isOpen, onClose, onSuccess }: AddBuildingDia
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mt-6">
-          <div className="space-y-2">
-            <Label htmlFor="name" className="text-sm font-semibold text-gray-900">
-              Nombre del Edificio
-            </Label>
-            <Input
-              id="name"
-              placeholder="Ej: Torre Centro"
-              {...register('name')}
-              className={`bg-white text-gray-900 placeholder:text-gray-500 ${errors.name ? 'border-red-500' : 'border-gray-300'}`}
-            />
-            {errors.name && (
-              <p className="text-sm text-red-600 font-medium">{errors.name.message}</p>
-            )}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-sm font-semibold text-gray-900">
+                Nombre del Edificio
+              </Label>
+              <Input
+                id="name"
+                placeholder="Ej: Torre Centro"
+                {...register('name')}
+                className={`bg-white text-gray-900 placeholder:text-gray-500 ${errors.name ? 'border-red-500' : 'border-gray-300'}`}
+              />
+              {errors.name && (
+                <p className="text-sm text-red-600 font-medium">{errors.name.message}</p>
+              )}
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="building_type" className="text-sm font-semibold text-gray-900">
+                Tipo de Inmueble
+              </Label>
+              <Select onValueChange={(value) => setValue('building_type', value)}>
+                <SelectTrigger className="bg-white text-gray-900 border-gray-300">
+                  <SelectValue placeholder="Selecciona el tipo" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="apartment">Edificio de Apartamentos</SelectItem>
+                  <SelectItem value="office">Edificio de Oficinas</SelectItem>
+                  <SelectItem value="commercial">Edificio Comercial</SelectItem>
+                  <SelectItem value="mixed">Uso Mixto</SelectItem>
+                  <SelectItem value="other">Otro</SelectItem>
+                </SelectContent>
+              </Select>
+              {errors.building_type && (
+                <p className="text-sm text-red-600 font-medium">{errors.building_type.message}</p>
+              )}
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
