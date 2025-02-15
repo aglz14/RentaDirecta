@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
@@ -12,6 +13,7 @@ interface Tenant {
     first_name: string;
     last_name: string;
     email: string;
+    whatsapp: string;
   };
   property: {
     name: string;
@@ -39,10 +41,12 @@ export function Tenants() {
             id,
             payment_scheme,
             last_payment_date,
+            created_at,
             profile:profiles!tenants_profile_id_fkey (
               first_name,
               last_name,
-              email
+              email,
+              whatsapp
             ),
             property:properties!tenants_property_id_fkey (
               name
@@ -52,9 +56,7 @@ export function Tenants() {
 
         if (error) throw error;
 
-        // Transform and sort the data
         const transformedTenants = data.map((tenant): Tenant => {
-          // Calculate status based on last payment date
           let status: Tenant['status'] = 'Al día';
           if (tenant.last_payment_date) {
             const lastPayment = new Date(tenant.last_payment_date);
@@ -148,6 +150,7 @@ export function Tenants() {
               <TableHead className="text-gray-900 font-semibold">Nombre</TableHead>
               <TableHead className="text-gray-900 font-semibold">Propiedad</TableHead>
               <TableHead className="text-gray-900 font-semibold">Email</TableHead>
+              <TableHead className="text-gray-900 font-semibold">WhatsApp</TableHead>
               <TableHead className="text-gray-900 font-semibold">Plan de Pago</TableHead>
               <TableHead className="text-gray-900 font-semibold">Último Pago</TableHead>
               <TableHead className="text-gray-900 font-semibold">Estado</TableHead>
@@ -156,7 +159,7 @@ export function Tenants() {
           <TableBody>
             {filteredTenants.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+                <TableCell colSpan={7} className="text-center py-8 text-gray-500">
                   No se encontraron inquilinos
                 </TableCell>
               </TableRow>
@@ -168,6 +171,7 @@ export function Tenants() {
                   </TableCell>
                   <TableCell className="text-gray-900">{tenant.property.name}</TableCell>
                   <TableCell className="text-gray-900">{tenant.profile.email}</TableCell>
+                  <TableCell className="text-gray-900">{tenant.profile.whatsapp}</TableCell>
                   <TableCell className="text-gray-900">
                     {tenant.payment_scheme === 'subscription' ? 'Suscripción' : 'Flex'}
                   </TableCell>
