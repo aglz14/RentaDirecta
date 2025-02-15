@@ -79,6 +79,17 @@ export function AddBuildingDialog({ isOpen, onClose, onSuccess }: AddBuildingDia
           .select('id, name, value')
           .order('name');
 
+        if (error) {
+          console.error('Supabase error:', error);
+          throw error;
+        }
+        
+        if (!data || data.length === 0) {
+          console.warn('No building types found');
+        }
+        
+        setBuildingTypes(data || []);
+
         if (error) throw error;
         setBuildingTypes(data || []);
       } catch (error) {

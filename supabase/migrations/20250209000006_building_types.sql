@@ -1,4 +1,6 @@
 
+BEGIN;
+
 CREATE TABLE IF NOT EXISTS public.building_types (
   id SERIAL PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
@@ -14,3 +16,5 @@ INSERT INTO public.building_types (name, value) VALUES
   ('Uso Mixto', 'mixed'),
   ('Otro', 'other')
 ON CONFLICT (value) DO NOTHING;
+
+COMMIT;
