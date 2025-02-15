@@ -141,8 +141,6 @@ export function AddBuildingDialog({
     try {
       setIsLoading(true);
 
-      const address = `${data.street} ${data.exterior_number}${data.interior_number ? ` Int. ${data.interior_number}` : ""}, ${data.neighborhood}, ${data.zip_code}`;
-
       const buildingData = {
         owner_id: user.id,
         name: data.name.trim(),
@@ -155,10 +153,12 @@ export function AddBuildingDialog({
         city: data.city.trim(),
         state: data.state.trim(),
         country: data.country.trim(),
-        address: `${data.street.trim()} ${data.exterior_number.trim()}${data.interior_number ? ` Int. ${data.interior_number.trim()}` : ""}, ${data.neighborhood.trim()}, ${data.zip_code.trim()}`,
+        address: `${data.street.trim()} ${data.exterior_number.trim()}${data.interior_number ? ` Int. ${data.interior_number.trim()}` : ""}, ${data.neighborhood.trim()}, ${data.zip_code.trim()}, ${data.city.trim()}, ${data.state.trim()}`
       };
 
-      const { error } = await supabase.from("building").insert([buildingData]);
+      const { error } = await supabase
+        .from("buildings")
+        .insert([buildingData]);
 
       if (error) throw error;
 
