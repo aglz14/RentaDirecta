@@ -61,7 +61,6 @@ export function Properties() {
         .select(`
           id,
           name,
-          area,
           monthly_rent,
           payment_scheme,
           active,
