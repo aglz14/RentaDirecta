@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { CheckCircle2, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -17,25 +18,51 @@ import { useAuth } from '@/contexts/AuthContext';
 
 const paymentPlans = [
   {
-    id: 'subscription',
-    name: 'Suscripción por Quincena',
-    description: 'Pago automático quincenal con 5% de descuento',
+    id: 'gestiona',
+    name: 'Plan Gestiona',
+    description: 'Para propietarios que sólo buscan gestionar sus inmubeles',
+    price: '299',
     features: [
-      'Descuento del 5% en la renta',
-      'Pagos automáticos',
-      'Sólo se requiere tarjeta de crédito',
-      'Sin cargos adicionales',
+      'Gestión de inquilinos',
+      'Control de recibos',
+      'Contratos',
+      'Propiedades',
+      'Gestión de activos',
+      'Mantenimiento',
+      'Solicitudes de remodelación',
+      'Directorio',
+      'Reportes',
+      'Soporte por correo',
+      'Panel de control personalizado',
     ],
   },
   {
-    id: 'flex',
-    name: 'Pagos Flex',
-    description: 'Flexibilidad en métodos y fechas de pago',
+    id: 'profesional',
+    name: 'Plan Profesional',
+    description: 'Para propietarios con 6 o menos propiedades',
+    price: '599',
     features: [
-      'Múltiples métodos de pago',
-      'Fechas flexibles',
-      'Renta basada en la fecha de pago',
-      'Recordatorios personalizados',
+      'Hasta 6 propiedades',
+      'Cobros puntuales de renta',
+      'Soporte por correo y whatsapp',
+      'Control de recibos',
+      'Cobros por suscripción',
+      'Beneficios del Plan Gestiona',
+    ],
+    highlight: true,
+  },
+  {
+    id: 'empresarial',
+    name: 'Plan Empresarial',
+    description: 'Para propietarios con 7 o más propiedades',
+    price: '499',
+    features: [
+      'Para 7 o más propiedades',
+      'Cobros puntuales de renta',
+      'Soporte por correo y whatsapp',
+      'Control de recibos',
+      'Cobros por suscripción',
+      'Beneficios del Plan Gestiona',
     ],
   },
 ];
@@ -48,7 +75,7 @@ export function Planes() {
   const { user, profile } = useAuth();
 
   // Simulated current plan - in production, this would come from your backend
-  const currentPlan = 'subscription';
+  const currentPlan = 'gestiona';
 
   const handlePlanChange = async (planId: string) => {
     setSelectedPlan(planId);
@@ -97,9 +124,9 @@ export function Planes() {
         </p>
       </div>
 
-      <div className="grid gap-8 md:grid-cols-2 max-w-5xl mx-auto">
+      <div className="grid gap-8 md:grid-cols-3">
         {paymentPlans.map((plan) => (
-          <Card key={plan.id} className={`relative ${plan.id === currentPlan ? 'border-[#00A86B]' : ''}`}>
+          <Card key={plan.id} className={`relative ${plan.id === currentPlan ? 'border-[#00A86B]' : ''} ${plan.highlight ? 'shadow-lg border-[#00A86B]' : ''}`}>
             {plan.id === currentPlan && (
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                 <span className="bg-[#00A86B] text-white px-4 py-1 rounded-full text-sm">
@@ -109,15 +136,17 @@ export function Planes() {
             )}
             <CardHeader>
               <CardTitle className="text-2xl font-bold text-gray-900">{plan.name}</CardTitle>
-              <CardDescription className="text-gray-600 text-base">
-                {plan.description}
+              <CardDescription className="mt-2">
+                <div className="text-3xl font-bold text-gray-900">${plan.price}</div>
+                <span className="text-gray-600">/mes</span>
               </CardDescription>
             </CardHeader>
             <CardContent>
+              <p className="text-gray-600 mb-6">{plan.description}</p>
               <ul className="space-y-4 mb-6">
                 {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-center text-gray-700">
-                    <CheckCircle2 className="h-5 w-5 text-[#00A86B] mr-2 flex-shrink-0" />
+                  <li key={feature} className="flex items-start text-gray-700">
+                    <CheckCircle2 className="h-5 w-5 text-[#00A86B] mr-2 flex-shrink-0 mt-0.5" />
                     <span>{feature}</span>
                   </li>
                 ))}
@@ -150,13 +179,13 @@ export function Planes() {
       <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-gray-900">Confirmar cambio de plan</AlertDialogTitle>
-            <AlertDialogDescription className="text-gray-600">
+            <AlertDialogTitle>Confirmar cambio de plan</AlertDialogTitle>
+            <AlertDialogDescription>
               ¿Estás seguro de que deseas cambiar tu plan de pago? Este cambio se aplicará a partir del próximo ciclo de facturación.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="text-gray-700">Cancelar</AlertDialogCancel>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmPlanChange}
               className="bg-[#00A86B] hover:bg-[#009060] text-white"
