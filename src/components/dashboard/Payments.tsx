@@ -248,6 +248,7 @@ export function Payments() {
                 <TableHead>Método de Pago</TableHead>
                 <TableHead>Monto</TableHead>
                 <TableHead>Estado</TableHead>
+                <TableHead>Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -286,6 +287,15 @@ export function Payments() {
                       : payment.status === "pending"
                         ? "Pendiente"
                         : "Fallido"}
+                  </TableCell>
+                  <TableCell>
+                    <button 
+                      className="inline-flex items-center gap-1 px-2 py-1 text-sm text-[#00A86B] hover:bg-[#00A86B]/10 rounded-md"
+                      onClick={() => {/* TODO: Implement invoice sending */}}
+                    >
+                      <Receipt className="h-4 w-4" />
+                      <span>Enviar factura</span>
+                    </button>
                   </TableCell>
                 </TableRow>
               ))}
