@@ -277,7 +277,7 @@ export function Payments() {
                           ? "Crédito"
                           : payment.payment_method.method === "convenience"
                             ? "Tienda"
-                            : "Suscripción"}
+                            : "Efectivo"}
                   </TableCell>
                   <TableCell>
                     ${payment.amount.toLocaleString("es-MX")}
@@ -290,9 +290,11 @@ export function Payments() {
                         : "Fallido"}
                   </TableCell>
                   <TableCell>
-                    <button 
+                    <button
                       className="inline-flex items-center gap-1 px-2 py-1 text-sm text-[#00A86B] hover:bg-[#00A86B]/10 rounded-md"
-                      onClick={() => {/* TODO: Implement invoice sending */}}
+                      onClick={() => {
+                        /* TODO: Implement invoice sending */
+                      }}
                     >
                       <Receipt className="h-4 w-4" />
                       <span>Enviar factura</span>
