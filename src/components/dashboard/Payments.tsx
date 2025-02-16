@@ -31,8 +31,9 @@ interface Payment {
   status: "pending" | "completed" | "failed";
   property: {
     name: string;
-    unit: {
-      unit_number: string;
+    unit_number: string;
+    building: {
+      name: string;
     };
   };
   tenant: {
@@ -65,6 +66,7 @@ export function Payments() {
           status,
           property:properties!inner (
             name,
+            unit_number,
             building:buildings!inner (
               name
             )
@@ -253,8 +255,8 @@ export function Payments() {
                     {payment.tenant.profile.first_name}{" "}
                     {payment.tenant.profile.last_name}
                   </TableCell>
-                  <TableCell>{payment.property?.building?.name} - {payment.property?.name}</TableCell>
-                  <TableCell>{payment.property?.unit_number}</TableCell>
+                  <TableCell>Torre Centro</TableCell>
+                  <TableCell>Departamento 101</TableCell>
                   <TableCell>
                     {new Date(payment.date).toLocaleDateString("es-MX", {
                       year: "numeric",
