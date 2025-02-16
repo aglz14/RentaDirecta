@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
-import { Search, Loader2 } from 'lucide-react';
+import { Search, Loader2, Eye } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
@@ -30,6 +31,7 @@ export function Tenants() {
   const [searchTerm, setSearchTerm] = useState('');
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedTenant, setSelectedTenant] = useState<Tenant | null>(null);
   const { user } = useAuth();
   const { toast } = useToast();
 
@@ -115,6 +117,7 @@ export function Tenants() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="text-gray-900 font-semibold">Ver</TableHead>
               <TableHead className="text-gray-900 font-semibold">Nombre</TableHead>
               <TableHead className="text-gray-900 font-semibold">Inmueble</TableHead>
               <TableHead className="text-gray-900 font-semibold">Unidad</TableHead>
@@ -136,6 +139,14 @@ export function Tenants() {
             ) : (
               filteredTenants.map((tenant) => (
                 <TableRow key={tenant.id} className="hover:bg-gray-50">
+                  <TableCell>
+                    <button
+                      onClick={() => setSelectedTenant(tenant)}
+                      className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                    >
+                      <Eye className="h-4 w-4 text-[#00A86B]" />
+                    </button>
+                  </TableCell>
                   <TableCell className="font-medium text-gray-900">
                     {tenant.profile.first_name} {tenant.profile.last_name}
                   </TableCell>
@@ -165,6 +176,38 @@ export function Tenants() {
           </TableBody>
         </Table>
       </div>
+
+      <Dialog open={!!selectedTenant} onOpenChange={() => setSelectedTenant(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Detalles del Inquilino</DialogTitle>
+          </DialogHeader>
+          {selectedTenant && (
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <h3 className="font-medium mb-2">Información Personal</h3>
+                  <p><span className="text-gray-500">Nombre:</span> {selectedTenant.profile.first_name} {selectedTenant.profile.last_name}</p>
+                  <p><span className="text-gray-500">Email:</span> {selectedTenant.profile.email}</p>
+                  <p><span className="text-gray-500">WhatsApp:</span> {selectedTenant.profile.whatsapp}</p>
+                </div>
+                <div>
+                  <h3 className="font-medium mb-2">Información de Renta</h3>
+                  <p><span className="text-gray-500">Plan de Pago:</span> {selectedTenant.payment_scheme === 'subscription' ? 'Suscripción' : 'Flex'}</p>
+                  <p><span className="text-gray-500">Renta:</span> ${selectedTenant.rent?.toLocaleString('en-US', { minimumFractionDigits: 2 })} {selectedTenant.currency}</p>
+                  <p><span className="text-gray-500">Último Pago:</span> {selectedTenant.last_payment_date 
+                    ? new Date(selectedTenant.last_payment_date).toLocaleDateString('es-MX', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                      })
+                    : 'Sin pagos'}</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
