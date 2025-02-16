@@ -1,8 +1,13 @@
-
-import { useState } from 'react';
-import { CheckCircle2, Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState } from "react";
+import { CheckCircle2, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,56 +18,56 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 const paymentPlans = [
   {
-    id: 'gestiona',
-    name: 'Plan Gestiona',
-    description: 'Para propietarios que sólo buscan gestionar sus inmubeles',
-    price: '299',
+    id: "gestiona",
+    name: "Plan Gestiona",
+    description: "Para propietarios que sólo buscan gestionar sus inmubeles",
+    price: "299",
     features: [
-      'Gestión de inquilinos',
-      'Control de recibos',
-      'Contratos',
-      'Propiedades',
-      'Gestión de activos',
-      'Mantenimiento',
-      'Solicitudes de remodelación',
-      'Directorio',
-      'Reportes',
-      'Soporte por correo',
-      'Panel de control personalizado',
+      "Gestión de inquilinos",
+      "Control de recibos",
+      "Contratos",
+      "Propiedades",
+      "Gestión de activos",
+      "Mantenimiento",
+      "Solicitudes de remodelación",
+      "Directorio",
+      "Reportes",
+      "Soporte por correo",
+      "Panel de control personalizado",
     ],
   },
   {
-    id: 'profesional',
-    name: 'Plan Profesional',
-    description: 'Para propietarios con 6 o menos propiedades',
-    price: '599',
+    id: "profesional",
+    name: "Plan Profesional",
+    description: "Para propietarios con 6 o menos propiedades",
+    price: "499",
     features: [
-      'Hasta 6 propiedades',
-      'Cobros puntuales de renta',
-      'Soporte por correo y whatsapp',
-      'Control de recibos',
-      'Cobros por suscripción',
-      'Beneficios del Plan Gestiona',
+      "Hasta 6 propiedades",
+      "Cobros puntuales de renta",
+      "Soporte por correo y whatsapp",
+      "Control de recibos",
+      "Cobros por suscripción",
+      "Beneficios del Plan Gestiona",
     ],
     highlight: true,
   },
   {
-    id: 'empresarial',
-    name: 'Plan Empresarial',
-    description: 'Para propietarios con 7 o más propiedades',
-    price: '499',
+    id: "empresarial",
+    name: "Plan Empresarial",
+    description: "Para propietarios con 7 o más propiedades",
+    price: "399",
     features: [
-      'Para 7 o más propiedades',
-      'Cobros puntuales de renta',
-      'Soporte por correo y whatsapp',
-      'Control de recibos',
-      'Cobros por suscripción',
-      'Beneficios del Plan Gestiona',
+      "Para 7 o más propiedades",
+      "Cobros puntuales de renta",
+      "Soporte por correo y whatsapp",
+      "Control de recibos",
+      "Cobros por suscripción",
+      "Beneficios del Plan Gestiona",
     ],
   },
 ];
@@ -75,7 +80,7 @@ export function Planes() {
   const { user, profile } = useAuth();
 
   // Simulated current plan - in production, this would come from your backend
-  const currentPlan = 'gestiona';
+  const currentPlan = "gestiona";
 
   const handlePlanChange = async (planId: string) => {
     setSelectedPlan(planId);
@@ -88,19 +93,20 @@ export function Planes() {
     setIsLoading(true);
     try {
       // Here you would implement the actual plan change logic with your backend
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulated API call
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulated API call
 
       toast({
-        title: 'Plan de pago actualizado',
-        description: 'Tu plan de pago ha sido actualizado exitosamente.',
+        title: "Plan de pago actualizado",
+        description: "Tu plan de pago ha sido actualizado exitosamente.",
       });
 
       setIsDialogOpen(false);
     } catch (error) {
       toast({
-        title: 'Error',
-        description: 'No se pudo actualizar el plan de pago. Por favor, intenta de nuevo.',
-        variant: 'destructive',
+        title: "Error",
+        description:
+          "No se pudo actualizar el plan de pago. Por favor, intenta de nuevo.",
+        variant: "destructive",
       });
     } finally {
       setIsLoading(false);
@@ -126,7 +132,10 @@ export function Planes() {
 
       <div className="grid gap-8 md:grid-cols-3">
         {paymentPlans.map((plan) => (
-          <Card key={plan.id} className={`relative ${plan.id === currentPlan ? 'border-[#00A86B]' : ''} ${plan.highlight ? 'shadow-lg border-[#00A86B]' : ''}`}>
+          <Card
+            key={plan.id}
+            className={`relative ${plan.id === currentPlan ? "border-[#00A86B]" : ""} ${plan.highlight ? "shadow-lg border-[#00A86B]" : ""}`}
+          >
             {plan.id === currentPlan && (
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                 <span className="bg-[#00A86B] text-white px-4 py-1 rounded-full text-sm">
@@ -135,9 +144,13 @@ export function Planes() {
               </div>
             )}
             <CardHeader>
-              <CardTitle className="text-2xl font-bold text-gray-900">{plan.name}</CardTitle>
+              <CardTitle className="text-2xl font-bold text-gray-900">
+                {plan.name}
+              </CardTitle>
               <CardDescription className="mt-2">
-                <div className="text-3xl font-bold text-gray-900">${plan.price}</div>
+                <div className="text-3xl font-bold text-gray-900">
+                  ${plan.price}
+                </div>
                 <span className="text-gray-600">/mes</span>
               </CardDescription>
             </CardHeader>
@@ -154,8 +167,8 @@ export function Planes() {
               <Button
                 className={`w-full ${
                   plan.id === currentPlan
-                    ? 'bg-gray-100 text-gray-600 hover:bg-gray-200 cursor-default'
-                    : 'bg-[#00A86B] hover:bg-[#009060] text-white'
+                    ? "bg-gray-100 text-gray-600 hover:bg-gray-200 cursor-default"
+                    : "bg-[#00A86B] hover:bg-[#009060] text-white"
                 }`}
                 disabled={plan.id === currentPlan || isLoading}
                 onClick={() => handlePlanChange(plan.id)}
@@ -166,9 +179,9 @@ export function Planes() {
                     Actualizando...
                   </>
                 ) : plan.id === currentPlan ? (
-                  'Plan Actual'
+                  "Plan Actual"
                 ) : (
-                  'Cambiar Plan'
+                  "Cambiar Plan"
                 )}
               </Button>
             </CardContent>
@@ -181,7 +194,8 @@ export function Planes() {
           <AlertDialogHeader>
             <AlertDialogTitle>Confirmar cambio de plan</AlertDialogTitle>
             <AlertDialogDescription>
-              ¿Estás seguro de que deseas cambiar tu plan de pago? Este cambio se aplicará a partir del próximo ciclo de facturación.
+              ¿Estás seguro de que deseas cambiar tu plan de pago? Este cambio
+              se aplicará a partir del próximo ciclo de facturación.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -196,7 +210,7 @@ export function Planes() {
                   Confirmando...
                 </>
               ) : (
-                'Confirmar Cambio'
+                "Confirmar Cambio"
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
