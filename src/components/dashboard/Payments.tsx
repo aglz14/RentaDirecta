@@ -267,13 +267,13 @@ export function Payments() {
                     })}
                   </TableCell>
                   <TableCell>
-                    {payment.method === "transfer"
+                    {payment.payment_method.method === "transfer"
                       ? "Transferencia"
-                      : payment.method === "debit"
+                      : payment.payment_method.method === "debit"
                         ? "Débito"
-                        : payment.method === "credit"
+                        : payment.payment_method.method === "credit"
                           ? "Crédito"
-                          : payment.method === "convenience"
+                          : payment.payment_method.method === "convenience"
                             ? "Tienda"
                             : "Suscripción"}
                   </TableCell>
