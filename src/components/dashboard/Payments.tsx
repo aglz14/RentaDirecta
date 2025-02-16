@@ -27,7 +27,9 @@ interface Payment {
   property_id: string;
   amount: number;
   date: string;
-  method: "transfer" | "debit" | "credit" | "convenience" | "subscription";
+  payment_method: {
+    method: string;
+  };
   status: "pending" | "completed" | "failed";
   property: {
     name: string;
