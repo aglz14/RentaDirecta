@@ -14,6 +14,9 @@ interface Tenant {
     last_name: string;
     email: string;
     whatsapp: string | null;
+    rfc: string | null;
+    curp: string | null;
+    complete_address: string | null;
   };
   property: {
     name: string;
@@ -190,6 +193,9 @@ export function Tenants() {
                   <p><span className="text-gray-500">Nombre:</span> {selectedTenant.profile.first_name} {selectedTenant.profile.last_name}</p>
                   <p><span className="text-gray-500">Email:</span> {selectedTenant.profile.email}</p>
                   <p><span className="text-gray-500">WhatsApp:</span> {selectedTenant.profile.whatsapp}</p>
+                  <p><span className="text-gray-500">RFC:</span> {selectedTenant.profile.rfc || 'No registrado'}</p>
+                  <p><span className="text-gray-500">CURP:</span> {selectedTenant.profile.curp || 'No registrado'}</p>
+                  <p><span className="text-gray-500">Domicilio Completo:</span> {selectedTenant.profile.complete_address || 'No registrado'}</p>
                 </div>
                 <div>
                   <h3 className="font-medium mb-2">Información de Renta</h3>
