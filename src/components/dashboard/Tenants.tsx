@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Search, Loader2, Eye } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { TenantDetailsDialog } from './TenantDetailsDialog';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
@@ -180,40 +180,11 @@ export function Tenants() {
         </Table>
       </div>
 
-      <Dialog open={!!selectedTenant} onOpenChange={() => setSelectedTenant(null)}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Detalles del Inquilino</DialogTitle>
-          </DialogHeader>
-          {selectedTenant && (
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <h3 className="font-medium mb-2">Información Personal</h3>
-                  <p><span className="text-gray-500">Nombre:</span> {selectedTenant.profile.first_name} {selectedTenant.profile.last_name}</p>
-                  <p><span className="text-gray-500">Email:</span> {selectedTenant.profile.email}</p>
-                  <p><span className="text-gray-500">WhatsApp:</span> {selectedTenant.profile.whatsapp}</p>
-                  <p><span className="text-gray-500">RFC:</span> {selectedTenant.profile.rfc || 'No registrado'}</p>
-                  <p><span className="text-gray-500">CURP:</span> {selectedTenant.profile.curp || 'No registrado'}</p>
-                  <p><span className="text-gray-500">Domicilio Completo:</span> {selectedTenant.profile.complete_address || 'No registrado'}</p>
-                </div>
-                <div>
-                  <h3 className="font-medium mb-2">Información de Renta</h3>
-                  <p><span className="text-gray-500">Plan de Pago:</span> {selectedTenant.payment_scheme === 'subscription' ? 'Suscripción' : 'Flex'}</p>
-                  <p><span className="text-gray-500">Renta:</span> ${selectedTenant.rent?.toLocaleString('en-US', { minimumFractionDigits: 2 })} {selectedTenant.currency}</p>
-                  <p><span className="text-gray-500">Último Pago:</span> {selectedTenant.last_payment_date 
-                    ? new Date(selectedTenant.last_payment_date).toLocaleDateString('es-MX', {
-                        day: 'numeric',
-                        month: 'long',
-                        year: 'numeric'
-                      })
-                    : 'Sin pagos'}</p>
-                </div>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+      <TenantDetailsDialog
+        tenant={selectedTenant}
+        open={!!selectedTenant}
+        onOpenChange={(open) => !open && setSelectedTenant(null)}
+      />
     </div>
   );
 }
