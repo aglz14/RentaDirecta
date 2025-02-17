@@ -1,47 +1,68 @@
-import { Plus, Mail, Apple as WhatsApp, Pencil, Trash2 } from 'lucide-react';
+
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { Edit2, Trash2, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { useState } from 'react';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/lib/supabase';
 
-const users = [
-  {
-    id: '1',
-    name: 'Carlos Ramírez',
-    role: 'Administrador',
-    email: 'carlos.ramirez@example.com',
-    whatsapp: '8112345678'
-  },
-  {
-    id: '2',
-    name: 'Ana López',
-    role: 'Propietario',
-    email: 'ana.lopez@example.com',
-    whatsapp: '8187654321'
-  },
-  {
-    id: '3',
-    name: 'Roberto García',
-    role: 'Mantenimiento',
-    email: 'roberto.garcia@example.com',
-    whatsapp: '8198765432'
-  }
-];
+interface BuildingUser {
+  id: string;
+  role: string;
+  profile: {
+    first_name: string;
+    last_name: string;
+    email: string;
+    whatsapp: string;
+  };
+}
 
 export function BuildingUsers() {
+  const { id: buildingId } = useParams();
+  const [users, setUsers] = useState<BuildingUser[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [userToDelete, setUserToDelete] = useState<string | null>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        setIsLoading(true);
+        const { data, error } = await supabase
+          .from('building_users')
+          .select(`
+            id,
+            role,
+            profile:profiles (
+              first_name,
+              last_name,
+              email,
+              whatsapp
+            )
+          `)
+          .eq('building_id', buildingId);
+
+        if (error) throw error;
+        setUsers(data || []);
+      } catch (error) {
+        console.error('Error fetching building users:', error);
+        toast({
+          title: 'Error',
+          description: 'No se pudieron cargar los usuarios del edificio.',
+          variant: 'destructive',
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (buildingId) {
+      fetchUsers();
+    }
+  }, [buildingId, toast]);
 
   const handleEdit = (userId: string) => {
     // TODO: Implement edit functionality
@@ -55,15 +76,32 @@ export function BuildingUsers() {
     setUserToDelete(userId);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (!userToDelete) return;
 
-    // TODO: Implement actual delete functionality
-    toast({
-      title: "Usuario Eliminado",
-      description: "El usuario ha sido eliminado exitosamente",
-    });
-    setUserToDelete(null);
+    try {
+      const { error } = await supabase
+        .from('building_users')
+        .delete()
+        .eq('id', userToDelete);
+
+      if (error) throw error;
+
+      setUsers(users.filter(user => user.id !== userToDelete));
+      toast({
+        title: "Usuario Eliminado",
+        description: "El usuario ha sido eliminado exitosamente",
+      });
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo eliminar el usuario",
+        variant: "destructive",
+      });
+    } finally {
+      setUserToDelete(null);
+    }
   };
 
   const openWhatsApp = (whatsapp: string) => {
@@ -83,56 +121,45 @@ export function BuildingUsers() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>Acciones</TableHead>
               <TableHead>Nombre</TableHead>
               <TableHead>Rol</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>WhatsApp</TableHead>
-              <TableHead>Acciones</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {users.map((user) => (
               <TableRow key={user.id}>
-                <TableCell className="font-medium">{user.name}</TableCell>
-                <TableCell>{user.role}</TableCell>
-                <TableCell>
-                  <a 
-                    href={`mailto:${user.email}`}
-                    className="flex items-center text-blue-600 hover:text-blue-800"
-                  >
-                    <Mail className="h-4 w-4 mr-2" />
-                    {user.email}
-                  </a>
-                </TableCell>
-                <TableCell>
-                  <Button
-                    variant="ghost"
-                    className="flex items-center text-green-600 hover:text-green-800 hover:bg-green-50"
-                    onClick={() => openWhatsApp(user.whatsapp)}
-                  >
-                    <WhatsApp className="h-4 w-4 mr-2" />
-                    {user.whatsapp}
-                  </Button>
-                </TableCell>
                 <TableCell>
                   <div className="flex space-x-2">
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
                       onClick={() => handleEdit(user.id)}
                     >
-                      <Pencil className="h-4 w-4" />
+                      <Edit2 className="h-4 w-4" />
                     </Button>
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="text-red-600 hover:text-red-800 hover:bg-red-50"
                       onClick={() => handleDelete(user.id)}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
+                </TableCell>
+                <TableCell>{`${user.profile.first_name} ${user.profile.last_name}`}</TableCell>
+                <TableCell>{user.role}</TableCell>
+                <TableCell>{user.profile.email}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="link"
+                    onClick={() => openWhatsApp(user.profile.whatsapp)}
+                    className="p-0 h-auto font-normal"
+                  >
+                    {user.profile.whatsapp}
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -150,12 +177,7 @@ export function BuildingUsers() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={confirmDelete}
-              className="bg-red-600 hover:bg-red-700 text-white"
-            >
-              Eliminar
-            </AlertDialogAction>
+            <AlertDialogAction onClick={confirmDelete}>Eliminar</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
