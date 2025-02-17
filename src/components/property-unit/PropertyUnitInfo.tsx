@@ -25,7 +25,7 @@ interface Property {
     email: string;
   };
   predial?: string | null;
-  building?: {
+  buildings?: {
     name: string;
   } | null;
 }
@@ -64,12 +64,12 @@ export function PropertyUnitInfo({ property }: PropertyUnitInfoProps) {
               </div>
             </div>
 
-            {property.building && (
+            {property.buildings && (
               <div className="flex items-center gap-2">
                 <Building2 className="h-5 w-5 text-[#4CAF50]" />
                 <div>
                   <p className="text-sm text-gray-500">Nombre del Inmueble</p>
-                  <p className="font-medium">{property.building.name}</p>
+                  <p className="font-medium">{property.buildings.name}</p>
                 </div>
               </div>
             )}
