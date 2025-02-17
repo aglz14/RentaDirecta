@@ -36,14 +36,14 @@ export function BuildingUsers() {
           .select(`
             id,
             role,
-            profile:profiles (
+            profile:profiles!building_users_profile_id_fkey (
               first_name,
               last_name,
               email,
               whatsapp
             )
           `)
-          .eq('building_id', buildingId);
+          .eq('building', buildingId);
 
         if (error) throw error;
         setUsers(data || []);
