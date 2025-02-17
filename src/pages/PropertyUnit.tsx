@@ -1,4 +1,5 @@
-import { useParams, useNavigate } from 'react-router-dom';
+
+import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
@@ -12,6 +13,8 @@ import { PropertyUnitMaintenance } from '@/components/property-unit/PropertyUnit
 import { BuildingDistribution } from '@/components/buildings/BuildingDistribution';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
+import { Skeleton } from '@/components/ui/skeleton';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface Property {
   id: string;
@@ -61,59 +64,55 @@ export default function PropertyUnit() {
     const fetchPropertyData = async () => {
       try {
         setIsLoading(true);
-
-        // Fetch property data
-        const { data: propertyData, error: propertyError } = await supabase
-          .from('properties')
-          .select(`
-            *,
-            property_types (
-              name
-            ),
-            owner:profiles!properties_owner_id_fkey (
-              first_name,
-              last_name,
-              email
-            ),
-            buildings!properties_building_id_fkey (
+        const [propertyResponse, tenantsResponse] = await Promise.all([
+          supabase
+            .from('properties')
+            .select(`
+              *,
+              property_types (name),
+              owner:profiles!properties_owner_id_fkey (
+                first_name,
+                last_name,
+                email
+              ),
+              buildings!properties_building_id_fkey (
+                id,
+                name
+              )
+            `)
+            .eq('id', id)
+            .single(),
+          supabase
+            .from('tenants')
+            .select(`
               id,
-              name
-            )
-          `)
-          .eq('id', id)
-          .single();
+              property_id,
+              payment_scheme,
+              last_payment_date,
+              created_at,
+              rent,
+              currency,
+              profile:profiles!tenants_profile_id_fkey (
+                first_name,
+                last_name,
+                email,
+                whatsapp,
+                user_type
+              ),
+              property:properties!tenants_property_id_fkey (
+                name,
+                monthly_rent
+              )
+            `)
+            .eq('property_id', id)
+            .order('created_at', { ascending: false })
+        ]);
 
-        if (propertyError) throw propertyError;
-        setProperty(propertyData);
+        if (propertyResponse.error) throw propertyResponse.error;
+        if (tenantsResponse.error) throw tenantsResponse.error;
 
-        // Fetch tenants data for this property
-        const { data: tenantsData, error: tenantsError } = await supabase
-          .from('tenants')
-          .select(`
-            id,
-            property_id,
-            payment_scheme,
-            last_payment_date,
-            created_at,
-            rent,
-            currency,
-            profile:profiles!tenants_profile_id_fkey (
-              first_name,
-              last_name,
-              email,
-              whatsapp,
-              user_type
-            ),
-            property:properties!tenants_property_id_fkey (
-              name,
-              monthly_rent
-            )
-          `)
-          .eq('property_id', id)
-          .order('created_at', { ascending: false });
-
-        if (tenantsError) throw tenantsError;
-        setTenants(tenantsData || []);
+        setProperty(propertyResponse.data);
+        setTenants(tenantsResponse.data || []);
       } catch (error) {
         console.error('Error fetching property data:', error);
         toast({
@@ -131,41 +130,44 @@ export default function PropertyUnit() {
     }
   }, [id, toast]);
 
-  if (!property && !isLoading) {
-    return (
-      <div className="min-h-screen flex flex-col bg-gray-50">
-        <Header />
-        <DashboardNav />
-        <main className="flex-1 py-8">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900">Propiedad no encontrada</h2>
-              <p className="mt-2 text-gray-600">La propiedad que buscas no existe o no tienes acceso a ella.</p>
-            </div>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Header />
       <DashboardNav />
-      <main className="flex-1 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="space-y-6">
-            <PropertyUnitHeader property={property} />
-            <PropertyUnitInfo property={property} />
-            <BuildingDistribution />
-            <PropertyUnitTenants tenants={tenants} />
-            <PropertyUnitDocuments />
-            <PropertyUnitPayments />
-            <PropertyUnitMaintenance />
+      <ScrollArea className="flex-1">
+        <main className="py-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {isLoading ? (
+              <div className="space-y-6">
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-[200px] w-full" />
+                <Skeleton className="h-[300px] w-full" />
+              </div>
+            ) : property ? (
+              <div className="grid gap-6 md:gap-8">
+                <PropertyUnitHeader property={property} />
+                <div className="grid md:grid-cols-2 gap-6">
+                  <PropertyUnitInfo property={property} />
+                  <BuildingDistribution />
+                </div>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <PropertyUnitTenants tenants={tenants} />
+                  <PropertyUnitDocuments />
+                </div>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <PropertyUnitPayments />
+                  <PropertyUnitMaintenance />
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <h2 className="text-2xl font-bold text-gray-900">Propiedad no encontrada</h2>
+                <p className="mt-2 text-gray-600">La propiedad que buscas no existe o no tienes acceso a ella.</p>
+              </div>
+            )}
           </div>
-        </div>
-      </main>
+        </main>
+      </ScrollArea>
       <Footer />
     </div>
   );
