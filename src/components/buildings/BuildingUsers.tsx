@@ -37,9 +37,9 @@ export function BuildingUsers() {
       try {
         setIsLoading(true);
         
-        // First check if current user is the owner
+        // First check if current user is the owner of the building
         const { data: buildingData, error: buildingError } = await supabase
-          .from('buildings')
+          .from('building')
           .select('owner_id')
           .eq('id', buildingId)
           .single();
@@ -54,13 +54,13 @@ export function BuildingUsers() {
           return;
         }
 
-        // Then fetch users if owner
+        // Fetch building users where building matches and include profile data
         const { data, error } = await supabase
           .from('building_users')
           .select(`
             id,
             role,
-            profiles (
+            profile:profile_id (
               first_name,
               last_name,
               email,
