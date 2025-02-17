@@ -42,7 +42,19 @@ export default function BuildingDetails() {
     const fetchBuilding = async () => {
       const { data, error } = await supabase
         .from('buildings')
-        .select('*')
+        .select(`
+          id,
+          name,
+          street,
+          exterior_number,
+          interior_number,
+          neighborhood,
+          zip_code,
+          city,
+          state,
+          country,
+          predial
+        `)
         .eq('id', id)
         .single();
 
