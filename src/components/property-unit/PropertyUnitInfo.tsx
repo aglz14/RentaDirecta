@@ -25,6 +25,9 @@ interface Property {
     email: string;
   };
   predial?: string | null;
+  building?: {
+    name: string;
+  } | null;
 }
 
 interface PropertyUnitInfoProps {
@@ -60,6 +63,16 @@ export function PropertyUnitInfo({ property }: PropertyUnitInfoProps) {
                 <p className="font-medium">{property.property_types.name}</p>
               </div>
             </div>
+
+            {property.building && (
+              <div className="flex items-center gap-2">
+                <Building2 className="h-5 w-5 text-[#4CAF50]" />
+                <div>
+                  <p className="text-sm text-gray-500">Nombre del Inmueble</p>
+                  <p className="font-medium">{property.building.name}</p>
+                </div>
+              </div>
+            )}
 
             <div>
               <p className="text-sm text-gray-500">Dirección</p>
