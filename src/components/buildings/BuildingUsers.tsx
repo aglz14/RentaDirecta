@@ -31,28 +31,19 @@ export function BuildingUsers() {
     const fetchUsers = async () => {
       try {
         setIsLoading(true);
-        const { data: buildingData, error: buildingError } = await supabase
-          .from('buildings')
-          .select('owner_id')
-          .eq('id', buildingId)
-          .single();
-
-        if (buildingError) throw buildingError;
-
         const { data, error } = await supabase
           .from('building_users')
           .select(`
             id,
             role,
-            profiles (
+            profile:profiles!building_users_profile_id_fkey (
               first_name,
               last_name,
               email,
               whatsapp
             )
           `)
-          .eq('building', buildingId)
-          .eq('owner_id', buildingData.owner_id);
+          .eq('building', buildingId);
 
         if (error) throw error;
         setUsers(data || []);
