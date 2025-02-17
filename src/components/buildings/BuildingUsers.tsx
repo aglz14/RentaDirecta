@@ -13,8 +13,7 @@ import { supabase } from '@/lib/supabase';
 interface BuildingUser {
   id: string;
   role: string;
-  first_name: string;
-  last_name: string;
+  full_name: string;
   email: string;
   whatsapp: string;
 }
@@ -55,7 +54,7 @@ export function BuildingUsers() {
         // Then fetch users if owner
         const { data, error } = await supabase
           .from('building_users')
-          .select('id, role, first_name, last_name, email, whatsapp')
+          .select('id, role, full_name, email, whatsapp')
           .eq('building', buildingId);
 
         if (error) throw error;
@@ -164,7 +163,7 @@ export function BuildingUsers() {
                     </Button>
                   </div>
                 </TableCell>
-                <TableCell>{`${user.first_name} ${user.last_name}`}</TableCell>
+                <TableCell>{user.full_name}</TableCell>
                 <TableCell>{user.role}</TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell>
