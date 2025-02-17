@@ -54,7 +54,16 @@ export function BuildingUsers() {
         // Then fetch users if owner
         const { data, error } = await supabase
           .from('building_users')
-          .select('id, role, full_name, email, whatsapp')
+          .select(`
+            id,
+            role,
+            full_name,
+            email,
+            whatsapp,
+            building (
+              owner_id
+            )
+          `)
           .eq('building', buildingId);
 
         if (error) throw error;
