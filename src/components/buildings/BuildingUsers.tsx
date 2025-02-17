@@ -13,12 +13,10 @@ import { supabase } from '@/lib/supabase';
 interface BuildingUser {
   id: string;
   role: string;
-  profiles: {
-    first_name: string;
-    last_name: string;
-    email: string;
-    whatsapp: string;
-  };
+  first_name: string;
+  last_name: string;
+  email: string;
+  whatsapp: string;
 }
 
 export function BuildingUsers() {
@@ -57,16 +55,7 @@ export function BuildingUsers() {
         // Then fetch users if owner
         const { data, error } = await supabase
           .from('building_users')
-          .select(`
-            id,
-            role,
-            profiles (
-              first_name,
-              last_name,
-              email,
-              whatsapp
-            )
-          `)
+          .select('id, role, first_name, last_name, email, whatsapp')
           .eq('building', buildingId);
 
         if (error) throw error;
@@ -175,16 +164,16 @@ export function BuildingUsers() {
                     </Button>
                   </div>
                 </TableCell>
-                <TableCell>{`${user.profiles.first_name} ${user.profiles.last_name}`}</TableCell>
+                <TableCell>{`${user.first_name} ${user.last_name}`}</TableCell>
                 <TableCell>{user.role}</TableCell>
-                <TableCell>{user.profiles.email}</TableCell>
+                <TableCell>{user.email}</TableCell>
                 <TableCell>
                   <Button
                     variant="link"
-                    onClick={() => openWhatsApp(user.profiles.whatsapp)}
+                    onClick={() => openWhatsApp(user.whatsapp)}
                     className="p-0 h-auto font-normal"
                   >
-                    {user.profiles.whatsapp}
+                    {user.whatsapp}
                   </Button>
                 </TableCell>
               </TableRow>
