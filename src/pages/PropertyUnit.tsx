@@ -74,6 +74,9 @@ export default function PropertyUnit() {
               first_name,
               last_name,
               email
+            ),
+            building (
+              name
             )
           `)
           .eq('id', id)
