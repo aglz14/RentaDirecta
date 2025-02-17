@@ -7,12 +7,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
 
 interface BuildingUser {
   id: string;
   role: string;
-  profile: {
+  profiles: {
     first_name: string;
     last_name: string;
     email: string;
@@ -22,21 +23,44 @@ interface BuildingUser {
 
 export function BuildingUsers() {
   const { id: buildingId } = useParams();
+  const { user } = useAuth();
   const [users, setUsers] = useState<BuildingUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [userToDelete, setUserToDelete] = useState<string | null>(null);
+  const [isOwner, setIsOwner] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     const fetchUsers = async () => {
+      if (!buildingId || !user) return;
+
       try {
         setIsLoading(true);
+        
+        // First check if current user is the owner
+        const { data: buildingData, error: buildingError } = await supabase
+          .from('buildings')
+          .select('owner_id')
+          .eq('id', buildingId)
+          .single();
+
+        if (buildingError) throw buildingError;
+        
+        const isOwner = buildingData.owner_id === user.id;
+        setIsOwner(isOwner);
+
+        if (!isOwner) {
+          setUsers([]);
+          return;
+        }
+
+        // Then fetch users if owner
         const { data, error } = await supabase
           .from('building_users')
           .select(`
             id,
             role,
-            profile:profiles!building_users_profile_id_fkey (
+            profiles (
               first_name,
               last_name,
               email,
@@ -59,10 +83,8 @@ export function BuildingUsers() {
       }
     };
 
-    if (buildingId) {
-      fetchUsers();
-    }
-  }, [buildingId, toast]);
+    fetchUsers();
+  }, [buildingId, user, toast]);
 
   const handleEdit = (userId: string) => {
     // TODO: Implement edit functionality
@@ -108,6 +130,10 @@ export function BuildingUsers() {
     window.open(`https://wa.me/52${whatsapp}`, '_blank');
   };
 
+  if (!isOwner) {
+    return null;
+  }
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
@@ -149,16 +175,16 @@ export function BuildingUsers() {
                     </Button>
                   </div>
                 </TableCell>
-                <TableCell>{`${user.profile.first_name} ${user.profile.last_name}`}</TableCell>
+                <TableCell>{`${user.profiles.first_name} ${user.profiles.last_name}`}</TableCell>
                 <TableCell>{user.role}</TableCell>
-                <TableCell>{user.profile.email}</TableCell>
+                <TableCell>{user.profiles.email}</TableCell>
                 <TableCell>
                   <Button
                     variant="link"
-                    onClick={() => openWhatsApp(user.profile.whatsapp)}
+                    onClick={() => openWhatsApp(user.profiles.whatsapp)}
                     className="p-0 h-auto font-normal"
                   >
-                    {user.profile.whatsapp}
+                    {user.profiles.whatsapp}
                   </Button>
                 </TableCell>
               </TableRow>
