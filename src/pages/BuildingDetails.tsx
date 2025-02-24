@@ -74,10 +74,8 @@ export default function BuildingDetails() {
               <div className="grid md:grid-cols-1 gap-6">
                 <BuildingDistribution />
               </div>
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6">
                 <BuildingUnits />
-              </div>
-              <div className="grid md:grid-cols-2 gap-6">
                 <BuildingExpenses />
                 <BuildingPerformance />
               </div>
