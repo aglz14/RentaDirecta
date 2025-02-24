@@ -6,7 +6,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { BuildingHeader } from '@/components/buildings/BuildingHeader';
 import { BuildingInfo } from '@/components/buildings/BuildingInfo';
-import { BuildingUsers } from '@/components/buildings/BuildingUsers';
+
 import { BuildingMap } from '@/components/buildings/BuildingMap';
 import { BuildingDistribution } from '@/components/buildings/BuildingDistribution';
 import { BuildingUnits } from '@/components/buildings/BuildingUnits';
@@ -91,9 +91,8 @@ export default function BuildingDetails() {
                 <BuildingInfo building={building} />
                 <BuildingMap building={building} />
               </div>
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid md:grid-cols-1 gap-6">
                 <BuildingDistribution />
-                <BuildingUsers />
               </div>
               <div className="grid md:grid-cols-2 gap-6">
                 <BuildingUnits />
