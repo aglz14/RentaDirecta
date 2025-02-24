@@ -127,7 +127,6 @@ export function Tenants() {
               <TableHead className="text-gray-900 font-semibold">Email</TableHead>
               <TableHead className="text-gray-900 font-semibold">WhatsApp</TableHead>
               <TableHead className="text-gray-900 font-semibold">Plan de Pago</TableHead>
-              <TableHead className="text-gray-900 font-semibold">Último Pago</TableHead>
               <TableHead className="text-gray-900 font-semibold">Renta</TableHead>
               <TableHead className="text-gray-900 font-semibold">Moneda</TableHead>
             </TableRow>
@@ -135,7 +134,7 @@ export function Tenants() {
           <TableBody>
             {filteredTenants.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={9} className="text-center py-8 text-gray-500">
+                <TableCell colSpan={8} className="text-center py-8 text-gray-500">
                   No se encontraron inquilinos
                 </TableCell>
               </TableRow>
@@ -159,15 +158,6 @@ export function Tenants() {
                   <TableCell className="text-gray-900">{tenant.profile.whatsapp}</TableCell>
                   <TableCell className="text-gray-900">
                     {tenant.payment_scheme === 'subscription' ? 'Suscripción' : 'Flex'}
-                  </TableCell>
-                  <TableCell className="text-gray-900">
-                    {tenant.last_payment_date 
-                      ? new Date(tenant.last_payment_date).toLocaleDateString('es-MX', {
-                          day: 'numeric',
-                          month: 'long',
-                          year: 'numeric'
-                        })
-                      : 'Sin pagos'}
                   </TableCell>
                   <TableCell className="text-gray-900">
                     ${tenant.rent?.toLocaleString('en-US', { minimumFractionDigits: 2 })}
