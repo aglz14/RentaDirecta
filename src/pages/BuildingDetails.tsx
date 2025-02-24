@@ -10,30 +10,10 @@ import { BuildingInfo } from '@/components/buildings/BuildingInfo';
 import { BuildingMap } from '@/components/buildings/BuildingMap';
 import { BuildingDistribution } from '@/components/buildings/BuildingDistribution';
 import { BuildingUnits } from '@/components/buildings/BuildingUnits';
-import { BuildingDocuments } from '@/components/buildings/BuildingDocuments';
 import { BuildingExpenses } from '@/components/buildings/BuildingExpenses';
 import { BuildingPerformance } from '@/components/buildings/BuildingPerformance';
 import { Building } from '@/types/buildings';
 import { Skeleton } from '@/components/ui/skeleton';
-
-const documents = [
-  {
-    id: '1',
-    name: 'Contrato de Arrendamiento.pdf',
-    type: 'PDF',
-    uploadDate: '2025-01-15',
-    expirationDate: '2026-01-15',
-    size: '2.5 MB'
-  },
-  {
-    id: '2',
-    name: 'Escrituras.pdf',
-    type: 'PDF',
-    uploadDate: '2025-01-10',
-    expirationDate: null,
-    size: '5.8 MB'
-  }
-];
 
 export default function BuildingDetails() {
   const { id } = useParams();
@@ -96,7 +76,6 @@ export default function BuildingDetails() {
               </div>
               <div className="grid md:grid-cols-2 gap-6">
                 <BuildingUnits />
-                <BuildingDocuments documents={documents} />
               </div>
               <div className="grid md:grid-cols-2 gap-6">
                 <BuildingExpenses />
