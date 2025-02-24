@@ -1,114 +1,134 @@
-import { useState } from 'react';
-import { Eye, Plus } from 'lucide-react';
+
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { useNavigate } from 'react-router-dom';
-import { AddUnitDialog } from './AddUnitDialog';
+import { Edit, Trash2 } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+import { useParams } from 'react-router-dom';
 
-const units = [
-  {
-    id: '1',
-    name: 'Oficina 101',
-    status: 'active',
-    use: 'Oficina',
-    rentableArea: 150,
-    rent: 45000,
-    currency: 'MXN',
-    city: 'Monterrey',
-    state: 'Nuevo León',
-    owners: ['Ana López', 'Carlos Ramírez']
-  },
-  {
-    id: '2',
-    name: 'Oficina 102',
-    status: 'inactive',
-    use: 'Oficina',
-    rentableArea: 200,
-    rent: 60000,
-    currency: 'MXN',
-    city: 'Monterrey',
-    state: 'Nuevo León',
-    owners: ['Roberto García']
-  }
-];
+interface Property {
+  id: string;
+  name: string;
+  active: boolean;
+  property_type: {
+    name: string;
+  };
+  square_meters_toRent: number;
+  monthly_rent: number;
+  city: string;
+  state: string;
+  tenants: {
+    profile: {
+      first_name: string;
+      last_name: string;
+    };
+  }[];
+}
 
 export function BuildingUnits() {
-  const navigate = useNavigate();
-  const [isAddUnitOpen, setIsAddUnitOpen] = useState(false);
+  const [units, setUnits] = useState<Property[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const { id: buildingId } = useParams();
 
-  const formatCurrency = (amount: number, currency: string) => 
-    new Intl.NumberFormat('es-MX', { style: 'currency', currency }).format(amount);
+  useEffect(() => {
+    const fetchUnits = async () => {
+      try {
+        if (!buildingId) return;
 
-  const handleAddUnitSuccess = () => {
-    // TODO: Refresh units list
+        const { data, error } = await supabase
+          .from('properties')
+          .select(`
+            id,
+            name,
+            active,
+            property_type:property_type_id (
+              name
+            ),
+            square_meters_toRent,
+            monthly_rent,
+            city,
+            state,
+            tenants!tenants_property_id_fkey (
+              profile:profiles!tenants_profile_id_fkey (
+                first_name,
+                last_name
+              )
+            )
+          `)
+          .eq('building_id', buildingId);
+
+        if (error) throw error;
+        setUnits(data || []);
+      } catch (error) {
+        console.error('Error fetching units:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUnits();
+  }, [buildingId]);
+
+  const getStatusBadge = (status: boolean) => {
+    if (status) {
+      return <Badge className="bg-green-500">Activo</Badge>;
+    }
+    return <Badge variant="secondary">Inactivo</Badge>;
   };
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Unidades</CardTitle>
-        <Button 
-          className="bg-[#4CAF50] hover:bg-[#3d9140]"
-          onClick={() => setIsAddUnitOpen(true)}
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Agregar Unidad
-        </Button>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Acciones</TableHead>
-              <TableHead>Estado</TableHead>
-              <TableHead>Nombre</TableHead>
-              <TableHead>Uso</TableHead>
-              <TableHead>M² Rentables</TableHead>
-              <TableHead>Renta</TableHead>
-              <TableHead>Ciudad</TableHead>
-              <TableHead>Estado</TableHead>
-              <TableHead>Propietarios</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {units.map((unit) => (
-              <TableRow key={unit.id}>
-                <TableCell>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => navigate(`/administracion/propiedad/${unit.id}`)}
-                  >
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Badge
-                    variant={unit.status === 'active' ? 'success' : 'secondary'}
-                  >
-                    {unit.status === 'active' ? 'Activo' : 'Inactivo'}
-                  </Badge>
-                </TableCell>
-                <TableCell className="font-medium">{unit.name}</TableCell>
-                <TableCell>{unit.use}</TableCell>
-                <TableCell>{unit.rentableArea}</TableCell>
-                <TableCell>{formatCurrency(unit.rent, unit.currency)}</TableCell>
-                <TableCell>{unit.city}</TableCell>
-                <TableCell>{unit.state}</TableCell>
-                <TableCell>{unit.owners.join(', ')}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </CardContent>
+    <div className="bg-white p-6 rounded-lg shadow">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-semibold">Unidades</h2>
+      </div>
 
-      <AddUnitDialog
-        isOpen={isAddUnitOpen}
-        onClose={() => setIsAddUnitOpen(false)}
-        onSuccess={handleAddUnitSuccess}
-      />
-    </Card>
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Uso</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">M2 Rentables</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Renta</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ciudad</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Inquilinos</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {units.map((unit) => (
+              <tr key={unit.id}>
+                <td className="px-4 py-3 whitespace-nowrap">
+                  {getStatusBadge(unit.active)}
+                </td>
+                <td className="px-4 py-3">{unit.name}</td>
+                <td className="px-4 py-3">{unit.property_type?.name}</td>
+                <td className="px-4 py-3">{unit.square_meters_toRent} m²</td>
+                <td className="px-4 py-3">${unit.monthly_rent?.toLocaleString()}</td>
+                <td className="px-4 py-3">{unit.city}</td>
+                <td className="px-4 py-3">{unit.state}</td>
+                <td className="px-4 py-3">
+                  {unit.tenants?.map(tenant => 
+                    `${tenant.profile.first_name} ${tenant.profile.last_name}`
+                  ).join(', ')}
+                </td>
+                <td className="px-4 py-3">
+                  <div className="flex gap-2">
+                    <Button variant="ghost" size="icon">
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon">
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 }
