@@ -45,12 +45,6 @@ export default function Cuenta() {
             <TabsContent value="profile">
               <Account />
             </TabsContent>
-            <TabsContent value="users">
-              <div className="bg-white p-6 sm:p-8 rounded-lg shadow">
-                <h2 className="text-2xl font-semibold mb-4">Usuarios de la Organización</h2>
-                {/* Add user management UI here */}
-              </div>
-            </TabsContent>
             <TabsContent value="subscription">
               <Planes />
             </TabsContent>
