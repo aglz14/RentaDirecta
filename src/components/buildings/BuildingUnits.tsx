@@ -1,10 +1,9 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Edit, Trash2 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 interface Property {
   id: string;
@@ -29,6 +28,7 @@ export function BuildingUnits() {
   const [units, setUnits] = useState<Property[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { id: buildingId } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUnits = async () => {
@@ -99,7 +99,11 @@ export function BuildingUnits() {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {units.map((unit) => (
-              <tr key={unit.id}>
+              <tr 
+                key={unit.id} 
+                className="border-t border-gray-200 hover:bg-gray-50 cursor-pointer"
+                onClick={() => navigate(`/administracion/propiedad/${unit.id}`)}
+              >
                 <td className="px-4 py-3 whitespace-nowrap">
                   {getStatusBadge(unit.active)}
                 </td>
@@ -114,7 +118,7 @@ export function BuildingUnits() {
                     `${tenant.profile.first_name} ${tenant.profile.last_name}`
                   ).join(', ')}
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
                   <div className="flex gap-2">
                     <Button variant="ghost" size="icon">
                       <Edit className="h-4 w-4" />
