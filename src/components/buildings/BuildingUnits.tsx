@@ -86,15 +86,30 @@ export function BuildingUnits() {
         <table className="w-full">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Uso</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">M2 Rentables</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Renta</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ciudad</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Inquilinos</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                Estado
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                Nombre
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                Tipo
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                m²
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                Renta Mensual
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                Ubicación
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                Inquilinos
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                Acciones
+              </th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -107,14 +122,23 @@ export function BuildingUnits() {
                 <td className="px-4 py-3 whitespace-nowrap">
                   {getStatusBadge(unit.active)}
                 </td>
-                <td className="px-4 py-3">{unit.name}</td>
-                <td className="px-4 py-3">{unit.property_type?.name}</td>
-                <td className="px-4 py-3">{unit.square_meters_toRent} m²</td>
-                <td className="px-4 py-3">${unit.monthly_rent?.toLocaleString()}</td>
-                <td className="px-4 py-3">{unit.city}</td>
-                <td className="px-4 py-3">{unit.state}</td>
                 <td className="px-4 py-3">
-                  {unit.tenants?.map(tenant => 
+                  <span className="text-gray-900 font-medium">{unit.name}</span>
+                </td>
+                <td className="px-4 py-3 whitespace-nowrap text-gray-900">
+                  {unit.property_type?.name}
+                </td>
+                <td className="px-4 py-3 whitespace-nowrap text-gray-900">
+                  {unit.square_meters_toRent}
+                </td>
+                <td className="px-4 py-3 whitespace-nowrap text-gray-900 font-medium">
+                  ${unit.monthly_rent?.toLocaleString('en-US')}
+                </td>
+                <td className="px-4 py-3 text-gray-900">
+                  {unit.city}, {unit.state}
+                </td>
+                <td className="px-4 py-3 text-gray-900">
+                  {unit.tenants?.map((tenant) =>
                     `${tenant.profile.first_name} ${tenant.profile.last_name}`
                   ).join(', ')}
                 </td>
