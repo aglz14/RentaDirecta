@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Edit, Trash2 } from 'lucide-react';
+import { Edit, Trash2, Eye } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -151,8 +151,6 @@ export function BuildingUnits() {
                       <Edit className="h-4 w-4" />
                     </Button>
                     <Button variant="ghost" size="icon" className="text-red-600 hover:text-red-800 hover:bg-red-100">
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
