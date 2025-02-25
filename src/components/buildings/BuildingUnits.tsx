@@ -144,7 +144,15 @@ export function BuildingUnits() {
                 </td>
                 <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
                   <div className="flex gap-2">
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="icon" className="text-blue-600 hover:text-blue-800 hover:bg-blue-100">
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="text-green-600 hover:text-green-800 hover:bg-green-100">
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="text-red-600 hover:text-red-800 hover:bg-red-100">
+                      <Trash2 className="h-4 w-4" />
+                    </Button>">
                       <Edit className="h-4 w-4" />
                     </Button>
                     <Button variant="ghost" size="icon">
